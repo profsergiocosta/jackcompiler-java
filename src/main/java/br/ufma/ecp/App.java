@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+
+
 public class App 
 {
 
@@ -23,8 +25,12 @@ public class App
 
     public static void main( String[] args )
     {
-        String input = "5+6-8";
-        Parser p = new Parser(input.getBytes());
-        p.parser();
+        int class;
+
+        String input = "5+96";
+        Scanner p = new Scanner(input.getBytes());
+        System.out.println(p.nextToken());
+        System.out.println(p.nextToken());
+        System.out.println(p.nextToken());
     }
 }
