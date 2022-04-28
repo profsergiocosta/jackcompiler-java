@@ -20,7 +20,7 @@ public class Parser {
         if (currentToken.type == type ) {
             nextToken();
         } else {
-            throw new Error("Syntax error");
+            throw new Error("Syntax error - expected "+type+" found " + currentToken.lexeme);
         }
     }
 
@@ -29,30 +29,42 @@ public class Parser {
     }
 
     void expr () {
-          number();
-          oper();
+        term();
+        oper();
+    }
+
+    void term () {
+        if (currentTokenIs (NUMBER)) {
+            number();
+        } else if (currentTokenIs (IDENTIFIER)) {
+            identifier();
+        } else {
+            throw new Error ("syntax error found " + currentToken.lexeme);
+        }
     }
 
     /*
-    oper -> + number oper
-     | - number oper
+    oper -> + term oper
+     | - term oper
      | ϵ 
+
+    term -> number | identifier
      */
     void oper () {
         if (currentTokenIs (PLUS)) {
             match(PLUS);
-            number();
+            term();
             System.out.println("add");
             oper();
         } else if (currentTokenIs (MINUS)) {
             match(MINUS);
-            number();
+            term();
             System.out.println("sub");
             oper();
         } else if (currentTokenIs(EOF)) {
             // to de boa
         } else {
-            throw new Error ("syntax error");
+            throw new Error ("syntax error found " + currentToken.lexeme);
         }
 
     }
@@ -61,6 +73,11 @@ public class Parser {
     void number () {
         System.out.println("push " + currentToken.lexeme);
         match (NUMBER);
+    }
+
+    void identifier () {
+        System.out.println("push " + currentToken.lexeme);
+        match (IDENTIFIER);
     }
 
     boolean currentTokenIs (TokenType type) {

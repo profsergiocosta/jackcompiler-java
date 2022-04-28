@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 
-
+import static br.ufma.ecp.TokenType.*;
 public class App 
 {
 
@@ -26,8 +26,18 @@ public class App
     public static void main( String[] args )
     {
 
-        String input = "5+96-89+78-4";
+        
+        String input = "5+ batata-89+78-4";
         Parser p = new Parser(input.getBytes());
         p.parser();
+        
+
+        /*
+        String input = "45 preco2 + 96";
+        Scanner scan = new Scanner(input.getBytes());
+        for (Token tk = scan.nextToken(); tk.type != EOF; tk = scan.nextToken()) {
+            System.out.println(tk);
+        }
+        */
     }
 }

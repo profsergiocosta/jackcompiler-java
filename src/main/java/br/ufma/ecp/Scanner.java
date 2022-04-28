@@ -3,6 +3,8 @@ package br.ufma.ecp;
 import java.io.EOFException;
 import java.nio.charset.StandardCharsets;
 
+import javax.lang.model.type.TypeKind;
+
 public class Scanner {
 
     private byte[] input;
@@ -16,11 +18,18 @@ public class Scanner {
     }
     // + - numeros (1, 12, 678)
     public Token nextToken () {
+
+        skipWhitespace();
+
         start = current;
         char ch = peek();
 
         if (Character.isDigit(ch)) {
             return number();
+        }
+
+        if (Character.isLetter(ch)) {
+            return identifier();
         }
 
         switch (ch) {
@@ -33,15 +42,33 @@ public class Scanner {
             case 0:
                 return new Token(TokenType.EOF, "EOF");  
             default:
-                break; 
+                advance(); 
+                return new Token(TokenType.ILLEGAL, Character.toString(ch));
         }
 
 
-        return null;
+      
 
+    }
 
+    private void skipWhitespace() {
+        char ch = peek();
+        while (ch == ' ' || ch == '\r' || ch == '\t' || ch == '\n') {
+            advance();
+            ch = peek();
+        }
+    }
 
-
+    private boolean isAlphaNumeric(char ch) {
+        return Character.isLetter(ch) || Character.isDigit(ch);
+    }
+    private Token identifier() {
+        while (isAlphaNumeric(peek()) ) {
+            advance();
+        }
+        String s = new String(input, start, current-start, StandardCharsets.UTF_8);
+        Token token = new Token (TokenType.IDENTIFIER,s);
+        return token;
     }
 
     private Token number () {
