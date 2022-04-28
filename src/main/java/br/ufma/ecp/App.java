@@ -27,7 +27,7 @@ public class App
     {
 
         
-        String input = "5+ batata-89+78-4";
+        String input = "5 +batata-89+78-4";
         Parser p = new Parser(input.getBytes());
         p.parser();
         
