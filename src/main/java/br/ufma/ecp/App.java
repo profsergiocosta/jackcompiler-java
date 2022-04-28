@@ -25,12 +25,9 @@ public class App
 
     public static void main( String[] args )
     {
-        int class;
 
-        String input = "5+96";
-        Scanner p = new Scanner(input.getBytes());
-        System.out.println(p.nextToken());
-        System.out.println(p.nextToken());
-        System.out.println(p.nextToken());
+        String input = "5+96-89+78-4";
+        Parser p = new Parser(input.getBytes());
+        p.parser();
     }
 }

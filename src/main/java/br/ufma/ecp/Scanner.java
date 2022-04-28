@@ -1,5 +1,6 @@
 package br.ufma.ecp;
 
+import java.io.EOFException;
 import java.nio.charset.StandardCharsets;
 
 public class Scanner {
@@ -14,7 +15,7 @@ public class Scanner {
         start = 0;
     }
     // + - numeros (1, 12, 678)
-    public String nextToken () {
+    public Token nextToken () {
         start = current;
         char ch = peek();
 
@@ -25,28 +26,31 @@ public class Scanner {
         switch (ch) {
             case '+':
                 advance();
-                return "+";
+                return new Token (TokenType.PLUS,"+");
             case '-':
                 advance();
-                return "-";   
+                return new Token (TokenType.MINUS,"-"); 
+            case 0:
+                return new Token(TokenType.EOF, "EOF");  
             default:
                 break; 
         }
 
 
-        return "";
+        return null;
 
 
 
 
     }
 
-    private String number () {
+    private Token number () {
         while (Character.isDigit(peek())) {
             advance();
         }
         String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        return s;
+        Token token = new Token (TokenType.NUMBER,s);
+        return token;
     }
 
     private void advance () {
