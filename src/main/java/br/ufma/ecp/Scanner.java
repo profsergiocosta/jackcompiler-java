@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.ElementScanner14;
 
 public class Scanner {
 
@@ -45,6 +46,16 @@ public class Scanner {
 
         switch (ch) {
 
+            case '/':
+                if (peekNext() == '/') {
+                    skipLineComments();
+                    return nextToken();
+                } else {
+                    advance();
+                    return new Token (TokenType.SLASH,"/");
+                }
+
+
             case '"':
                 return string();
             case '+':
@@ -65,7 +76,12 @@ public class Scanner {
 
     }
 
-   
+
+    
+    private void skipLineComments() {
+  
+        for (char ch = peek(); ch != '\n' && ch != 0;  advance(), ch = peek()) ;
+    }
 
     private void skipWhitespace() {
         char ch = peek();
@@ -125,6 +141,15 @@ public class Scanner {
              return 0;
          }
     }
+
+    private char peekNext () {
+        int next = current + 1;
+        if ( next  < input.length) {
+            return (char)input[next];
+        } else {
+            return 0;
+        }
+   }
 
 
     
