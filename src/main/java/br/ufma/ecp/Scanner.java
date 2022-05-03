@@ -98,15 +98,6 @@ public class Scanner {
         }
     }
 
-
-    private void match (char c) {
-        if (c == peek ()) {
-            current++;
-        } else {
-            throw new Error("Syntax error");
-        }
-    }
-
     private char peek () {
          if ( current < input.length) {
              return (char)input[current];
