@@ -41,7 +41,12 @@ public class Scanner {
             return identifier();
         }
 
+
+
         switch (ch) {
+
+            case '"':
+                return string();
             case '+':
                 advance();
                 return new Token (TokenType.PLUS,"+");
@@ -60,6 +65,8 @@ public class Scanner {
 
     }
 
+   
+
     private void skipWhitespace() {
         char ch = peek();
         while (ch == ' ' || ch == '\r' || ch == '\t' || ch == '\n') {
@@ -71,6 +78,19 @@ public class Scanner {
     private boolean isAlphaNumeric(char ch) {
         return Character.isLetter(ch) || Character.isDigit(ch);
     }
+
+    private Token string () {
+        advance();
+        start = current;
+        while (peek() != '"' && peek() != 0) {
+            advance();
+        }
+        String s = new String(input, start, current-start, StandardCharsets.UTF_8);
+        Token token = new Token (TokenType.STRING,s);
+        advance();
+        return token;
+    }
+
     private Token identifier() {
         while (isAlphaNumeric(peek()) ) {
             advance();
