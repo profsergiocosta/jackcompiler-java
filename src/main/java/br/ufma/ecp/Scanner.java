@@ -77,6 +77,32 @@ public class Scanner {
     }
 
 
+    private void skipBlockComments() {
+        boolean endComment = false;
+        advance();
+        char ch = peek();
+        while (!endComment) {
+
+            if ( ch == 0) { // eof
+                System.out.println (String.format("%v: expected %s, got %s instead", 0, "*/", "EOF"));
+                System.exit(1);
+            }
+    
+         
+            if (ch == '*') {
+
+                for (ch = peek(); ch == '*' && ch != 0;  advance(), ch = peek()) ;
+
+             
+                if (ch == '/') {
+                    endComment = true;
+                    advance();
+                }
+            }
+        }
+
+    }
+
     
     private void skipLineComments() {
   
