@@ -50,7 +50,13 @@ public class Scanner {
                 if (peekNext() == '/') {
                     skipLineComments();
                     return nextToken();
-                } else {
+                } else if (peekNext() == '*') {
+                    skipBlockComments();
+                    return nextToken();
+                }
+                
+                
+                else {
                     advance();
                     return new Token (TokenType.SLASH,"/");
                 }
@@ -80,18 +86,19 @@ public class Scanner {
     private void skipBlockComments() {
         boolean endComment = false;
         advance();
-        char ch = peek();
+
         while (!endComment) {
+            advance();
+            char ch = peek();
 
             if ( ch == 0) { // eof
-                System.out.println (String.format("%v: expected %s, got %s instead", 0, "*/", "EOF"));
                 System.exit(1);
             }
     
          
             if (ch == '*') {
 
-                for (ch = peek(); ch == '*' && ch != 0;  advance(), ch = peek()) ;
+               for (ch = peek(); ch == '*';  advance(), ch = peek()) ;
 
              
                 if (ch == '/') {
@@ -99,6 +106,7 @@ public class Scanner {
                     advance();
                 }
             }
+
         }
 
     }
