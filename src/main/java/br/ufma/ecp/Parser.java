@@ -50,6 +50,9 @@ public class Parser {
 
     term -> number | identifier
      */
+
+     // term (op term)*
+     
     void oper () {
         if (currentTokenIs (PLUS)) {
             match(PLUS);

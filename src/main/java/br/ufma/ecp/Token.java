@@ -62,18 +62,21 @@ public class Token {
             categoria = "symbol";
             //Os símbolos <, >, ", e & são impressos como &lt;  &gt;  &quot; e &amp; Para não conflitar com o significado destes símbolos no XML
             if (valor == ">") {
-                valor = "&lt" ;
-            } else if (valor == "<") {
                 valor = "&gt" ;
+            } else if (valor == "<") {
+                valor = "&lt" ;
             } else if (valor == "\"") {
                 valor = "&quot" ;
             } else if (valor == "&") {
                 valor = "&amp" ;
             }
+
         } else if (categoria.equals("number")) {
             categoria = "integerConstant";
         } else if (Token.keyword(lexeme) != null) {
             categoria = "keyword";
+        } else if (categoria.equals("string")) {
+            categoria = "stringConstant";
         }
         return "<" + categoria + "> " + valor  + " </" + categoria + ">";
     }

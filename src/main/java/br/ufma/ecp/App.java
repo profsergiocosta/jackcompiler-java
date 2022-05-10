@@ -27,19 +27,22 @@ public class App
     {
 
         
-      //  String input = "5 +batata-89+78-4";
-       // Parser p = new Parser(input.getBytes());
-        //p.parser();
+        String input = "10+20+50+89";
+        Parser p = new Parser(input.getBytes());
+        p.parser();
         
 
         
         //String input = "45 preco2 + 96";
+
+
+        /*
         Scanner scan = new Scanner(fromFile().getBytes());
         System.out.println("<tokens>");        
         for (Token tk = scan.nextToken(); tk.type != EOF; tk = scan.nextToken()) {
             System.out.println(tk);
         }
         System.out.println("</tokens>");        
-        
+        */
     }
 }
