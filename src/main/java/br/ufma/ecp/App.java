@@ -27,7 +27,7 @@ public class App
     {
 
         
-        String input = "10+20";
+        String input = "let a = preco + 10 + 50;";
         Parser p = new Parser(input.getBytes());
         p.parser();
         
