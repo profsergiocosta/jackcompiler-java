@@ -27,11 +27,9 @@ public class App
     {
 
         
-        String input = "let a = preco + 10 + 50;";
+        String input = "let a = true;";
         Parser p = new Parser(input.getBytes());
         p.parser();
-        
-
         
         //String input = "45 preco2 + 96";
 

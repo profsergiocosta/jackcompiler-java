@@ -45,7 +45,7 @@ public class Parser {
         System.out.println("</expression>");
     }
 
-     // term -> number | identifier
+     // term -> number | identifier | stringConstant | keywordConstant
     void parserTerm () {
         System.out.println("<term>");
         switch (peekToken.type) {
@@ -54,6 +54,14 @@ public class Parser {
                 break;
             case IDENTIFIER:
                 expectPeek(IDENTIFIER);
+                break;
+            case STRING:
+                expectPeek(STRING);
+                break;
+            case FALSE:
+            case NULL:
+            case TRUE:
+                expectPeek(FALSE,NULL,TRUE);
                 break;
             default:
                 ;
@@ -71,6 +79,17 @@ public class Parser {
         return currentToken.type == type;
     }
 
+    private void expectPeek (TokenType... types) {
+        for (TokenType type : types) {
+            if (peekToken.type == type ) {
+                expectPeek(type);
+                return;
+            }
+        }
+       
+        throw new Error("Syntax error");
+       
+    }
 
     private void expectPeek (TokenType type) {
         if (peekToken.type == type ) {
