@@ -29,6 +29,7 @@ public enum TokenType {
     SEMICOLON,
     DOT,
 
+    // operators
     PLUS,
     MINUS,
     ASTERISK,

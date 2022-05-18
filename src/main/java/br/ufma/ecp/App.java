@@ -27,9 +27,10 @@ public class App
     {
 
         
-        String input = "let a = true;";
+        //String input = "let a[4] = 10 - 5;";
+        String input = "while (10) { let a[4] = 10 - 5; }";
         Parser p = new Parser(input.getBytes());
-        p.parser();
+        p.parse();
         
         //String input = "45 preco2 + 96";
 

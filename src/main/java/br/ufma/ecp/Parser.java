@@ -19,34 +19,83 @@ public class Parser {
     }
 
 
-    void parser () {
-        parserLet();
+    void parse () {
+        parseStatements();
     }
 
-    //letStatement -> 'let' identifier  '=' expression ';'
-    void parserLet() {
+    //letStatement -> 'let' identifier( '[' expression ']' )?  '=' expression ';'
+    void parseLet() {
         System.out.println("<letStatement>");
         expectPeek(LET);
         expectPeek(IDENTIFIER);
+
+        if (peekTokenIs (LBRACKET)) {
+            expectPeek(LBRACKET);
+            parseExpression();
+            expectPeek(RBRACKET);
+        }
+
         expectPeek(EQ);
-        parserExpression();
+        parseExpression();
         expectPeek(SEMICOLON);
         System.out.println("</letStatement>");
     }
-    // expression -> term (op term)*
 
-    void parserExpression() {
+    // 'while' '(' expression ')' '{' statements '}'
+    void parseWhile () {
+        System.out.println("<whileStatement>");
+        expectPeek(WHILE);
+        expectPeek(LPAREN);
+        parseExpression();
+        expectPeek(RPAREN);
+        expectPeek(LBRACE);
+        parseStatements();
+        expectPeek(RBRACE);
+        System.out.println("</whileStatement>");
+    }
+
+    void parseStatements () {
+        System.out.println("<statements>");
+        while (peekToken.type == WHILE ||
+        peekToken.type == IF ||
+        peekToken.type == LET ||
+        peekToken.type == DO ||
+        peekToken.type == RETURN ) {
+            parseStatement();
+        }
+        
+        System.out.println("</statements>");
+    }
+
+    void parseStatement () {
+        switch (peekToken.type) {
+            case LET:
+                parseLet();
+                break;
+            case WHILE:
+                parseWhile();
+                break;
+            default:
+                return;
+        }
+    }
+
+
+    // expression -> term (op term)*
+    void parseExpression() {
         System.out.println("<expression>");
-        parserTerm ();
-        while (peekTokenIs(PLUS)) {
-            expectPeek(PLUS);
-            parserTerm();
+        parseTerm ();
+        while (isOperator(peekToken.type)) {
+            expectPeek(peekToken.type);
+            parseTerm();
         }
         System.out.println("</expression>");
     }
 
+
+
      // term -> number | identifier | stringConstant | keywordConstant
-    void parserTerm () {
+    void parseTerm () {
         System.out.println("<term>");
         switch (peekToken.type) {
             case NUMBER:
@@ -70,6 +119,10 @@ public class Parser {
     }
 
     // funções auxiliares
+
+    private boolean isOperator (TokenType type) {
+        return type.ordinal() >= PLUS.ordinal() && type.ordinal() <= EQ.ordinal();
+    }
 
     boolean peekTokenIs (TokenType type) {
         return peekToken.type == type;
