@@ -25,7 +25,7 @@ public class Parser {
 
     //letStatement -> 'let' identifier( '[' expression ']' )?  '=' expression ';'
     void parseLet() {
-        System.out.println("<letStatement>");
+        printNonTerminal("letStatement");
         expectPeek(LET);
         expectPeek(IDENTIFIER);
 
@@ -38,12 +38,12 @@ public class Parser {
         expectPeek(EQ);
         parseExpression();
         expectPeek(SEMICOLON);
-        System.out.println("</letStatement>");
+        printNonTerminal("/letStatement");
     }
 
     // 'while' '(' expression ')' '{' statements '}'
     void parseWhile () {
-        System.out.println("<whileStatement>");
+        printNonTerminal("whileStatement");
         expectPeek(WHILE);
         expectPeek(LPAREN);
         parseExpression();
@@ -51,11 +51,24 @@ public class Parser {
         expectPeek(LBRACE);
         parseStatements();
         expectPeek(RBRACE);
-        System.out.println("</whileStatement>");
+        printNonTerminal("/whileStatement");
     }
 
+    void parseIf () {
+        printNonTerminal("ifStatement");
+        expectPeek(IF);
+        expectPeek(LPAREN);
+        parseExpression();
+        expectPeek(RPAREN);
+        expectPeek(LBRACE);
+        parseStatements();
+        expectPeek(RBRACE);
+        printNonTerminal("/ifStatement");
+    }
+
+
     void parseStatements () {
-        System.out.println("<statements>");
+        printNonTerminal("statements");
         while (peekToken.type == WHILE ||
         peekToken.type == IF ||
         peekToken.type == LET ||
@@ -64,7 +77,7 @@ public class Parser {
             parseStatement();
         }
         
-        System.out.println("</statements>");
+        printNonTerminal("/statements");
     }
 
     void parseStatement () {
@@ -75,28 +88,44 @@ public class Parser {
             case WHILE:
                 parseWhile();
                 break;
+            case IF:
+                parseIf();
+                break;
+            case RETURN:
+                parseReturn();
+                break;
             default:
-                return;
+                throw new Error("Syntax error - expected a statement");
         }
     }
+    //ReturnStatement -> 'return' expression? ';'
+    void parseReturn () {
+        printNonTerminal("returnStatement");
+        expectPeek(RETURN);
+        if (!peekTokenIs(SEMICOLON)) {
+            parseExpression();
+        }
+        expectPeek(SEMICOLON);
 
+        printNonTerminal("/returnStatement");
+    }
 
     // expression -> term (op term)*
     void parseExpression() {
-        System.out.println("<expression>");
+        printNonTerminal("expression");
         parseTerm ();
         while (isOperator(peekToken.type)) {
             expectPeek(peekToken.type);
             parseTerm();
         }
-        System.out.println("</expression>");
+        printNonTerminal("/expression");
     }
 
 
 
      // term -> number | identifier | stringConstant | keywordConstant
     void parseTerm () {
-        System.out.println("<term>");
+        printNonTerminal("term");
         switch (peekToken.type) {
             case NUMBER:
                 expectPeek(NUMBER);
@@ -115,10 +144,14 @@ public class Parser {
             default:
                 ;
         }
-        System.out.println("</term>");
+        printNonTerminal("/term");
     }
 
     // funções auxiliares
+
+    private void printNonTerminal (String nterminal) {
+        System.out.println("<"+nterminal+">");
+    }
 
     private boolean isOperator (TokenType type) {
         return type.ordinal() >= PLUS.ordinal() && type.ordinal() <= EQ.ordinal();
