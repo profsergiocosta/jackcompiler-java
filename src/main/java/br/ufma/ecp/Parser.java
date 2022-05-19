@@ -29,17 +29,18 @@ public class Parser {
     void parseSubroutineCall () {
         if (peekTokenIs (LPAREN)) {
             expectPeek(LPAREN);
-            parseExpression();
+            parseExpressionList();
             expectPeek(RPAREN);
         } else {
             // pode ser um metodo de um outro objeto ou uma função
             expectPeek(DOT);
             expectPeek(IDENTIFIER);
             expectPeek(LPAREN);
-            parseExpression();
+            parseExpressionList();
             expectPeek(RPAREN);
         }
     }
+
 
     void parseDo () {
         printNonTerminal("doStatement");
@@ -51,6 +52,70 @@ public class Parser {
         printNonTerminal("/doStatement");
     }
 
+    //classVarDec → ( 'static' | 'field' ) type varName ( ',' varName)* ';'
+    void parseClassVarDec () {
+        printNonTerminal("classVarDec");
+        expectPeek(FIELD,STATIC);
+        // 'int' | 'char' | 'boolean' | className
+        expectPeek(INT,CHAR,BOOLEAN,IDENTIFIER);
+        expectPeek(IDENTIFIER);
+
+        while (peekTokenIs(COMMA)) {
+            expectPeek(COMMA);
+            expectPeek(IDENTIFIER);
+        }
+
+        expectPeek(SEMICOLON);
+        printNonTerminal("/classVarDec");
+    }
+
+
+    void parseSubroutineDec () {
+        printNonTerminal("classVarDec");
+        expectPeek(CONSTRUCTOR, FUNCTION, METHOD);
+        // 'int' | 'char' | 'boolean' | className
+        expectPeek(VOID, INT,CHAR,BOOLEAN,IDENTIFIER);
+        expectPeek(IDENTIFIER);
+
+        expectPeek(LPAREN);
+        parseParameterList();
+        expectPeek(RPAREN);
+        parseSubroutineBody();
+
+        printNonTerminal("/classVarDec");
+    }
+
+
+    void parseParameterList()
+    {
+        printNonTerminal("parameterList");
+
+
+        if (!peekTokenIs(RPAREN)) // verifica se tem pelo menos uma expressao
+        {
+            expectPeek(INT,CHAR,BOOLEAN,IDENTIFIER);
+            expectPeek(IDENTIFIER);
+        }
+
+
+        while (peekTokenIs(COMMA))
+        {
+            expectPeek(COMMA);
+            expectPeek(INT,CHAR,BOOLEAN,IDENTIFIER);
+            expectPeek(IDENTIFIER);
+        }
+
+        printNonTerminal("/parameterList");
+    }
+
+    void parseSubroutineBody () {
+        expectPeek(LBRACE);
+        parseStatements();
+        expectPeek(RBRACE);
+    }
+
+
+  
 
     //letStatement -> 'let' identifier( '[' expression ']' )?  '=' expression ';'
     void parseLet() {
@@ -140,6 +205,23 @@ public class Parser {
         expectPeek(SEMICOLON);
 
         printNonTerminal("/returnStatement");
+    }
+
+    void parseExpressionList() {
+        printNonTerminal("expressionList");
+
+        if (!peekTokenIs(RPAREN)) // verifica se tem pelo menos uma expressao
+        {
+            parseExpression();
+        }
+
+        // procurando as demais
+        while (peekTokenIs(COMMA)) {
+            expectPeek(COMMA);
+            parseExpression();
+        }
+
+        printNonTerminal("/expressionList");
     }
 
     // expression -> term (op term)*

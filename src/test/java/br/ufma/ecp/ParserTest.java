@@ -52,5 +52,21 @@ public class ParserTest extends TestSupport {
         System.out.println(parser.XMLOutput());
     }
 
+    @Test
+    public void testClassVarDecParser() {
+        var input = "field int a,b;";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseClassVarDec();
+        System.out.println(parser.XMLOutput());
+    }
+
+    @Test
+    public void testParserSubroutineDec() {
+        var input = "method void funcao (){let a = 10;}";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseSubroutineDec();
+        System.out.println(parser.XMLOutput());
+    }
+
 
 }
