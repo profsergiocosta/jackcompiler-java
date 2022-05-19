@@ -2,6 +2,7 @@ package br.ufma.ecp;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -62,11 +63,24 @@ public class ParserTest extends TestSupport {
 
     @Test
     public void testParserSubroutineDec() {
-        var input = "method void funcao (){let a = 10;}";
+        var input = "method void funcao (){var int a; let a = 10;}";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
         parser.parseSubroutineDec();
         System.out.println(parser.XMLOutput());
     }
 
+
+    @Test
+    public void testParserWithSquareGame() throws IOException {
+        var input = fromFile("ExpressionLessSquare/SquareGame.jack");
+        var expectedResult =  fromFile("ExpressionLessSquare/SquareGame.xml");
+
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parse();
+        var result = parser.XMLOutput();
+        System.out.println(result);
+        expectedResult = expectedResult.replaceAll("  ", "");
+        assertEquals(expectedResult, result);
+    }
 
 }

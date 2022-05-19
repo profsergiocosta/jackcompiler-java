@@ -27,7 +27,7 @@ public class ScannerTest extends TestSupport {
         }
 
         result.append("</tokens>\r\n");
-        System.out.println(result.toString());
+        
         assertEquals(expectedResult, result.toString());
     }
 
