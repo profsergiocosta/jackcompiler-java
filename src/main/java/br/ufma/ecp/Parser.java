@@ -24,6 +24,34 @@ public class Parser {
         parseStatements();
     }
 
+
+    // subroutineCall ->  subroutineName '(' expressionList ')' | (className|varName) '.' subroutineName '(' expressionList ')
+    void parseSubroutineCall () {
+        if (peekTokenIs (LPAREN)) {
+            expectPeek(LPAREN);
+            parseExpression();
+            expectPeek(RPAREN);
+        } else {
+            // pode ser um metodo de um outro objeto ou uma função
+            expectPeek(DOT);
+            expectPeek(IDENTIFIER);
+            expectPeek(LPAREN);
+            parseExpression();
+            expectPeek(RPAREN);
+        }
+    }
+
+    void parseDo () {
+        printNonTerminal("doStatement");
+        expectPeek(DO);
+        expectPeek(IDENTIFIER);
+        parseSubroutineCall();
+        expectPeek(SEMICOLON);
+
+        printNonTerminal("/doStatement");
+    }
+
+
     //letStatement -> 'let' identifier( '[' expression ']' )?  '=' expression ';'
     void parseLet() {
         printNonTerminal("letStatement");
@@ -94,6 +122,9 @@ public class Parser {
                 break;
             case RETURN:
                 parseReturn();
+                break;
+            case DO:
+                parseDo();
                 break;
             default:
                 throw new Error("Syntax error - expected a statement");

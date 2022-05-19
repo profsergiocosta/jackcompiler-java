@@ -27,4 +27,30 @@ public class ParserTest extends TestSupport {
         System.out.println(parser.XMLOutput());
     }
 
+    @Test
+    public void testDoParse() {
+        var input = "do calcula(10);";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parse();
+        System.out.println(parser.XMLOutput());
+    }
+
+    @Test
+    public void testDoParseMethod() {
+        var input = "do ponto.distancia(10);";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parse();
+        System.out.println(parser.XMLOutput());
+    }
+
+
+    @Test
+    public void testDoParseExpressionList() {
+        var input = "do ponto.distancia(10, 20);";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parse();
+        System.out.println(parser.XMLOutput());
+    }
+
+
 }
