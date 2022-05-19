@@ -7,6 +7,7 @@ public class Parser {
     private Scanner scan;
     private Token currentToken;
     private Token peekToken;
+    private String xmlOutput;
 
     public Parser (byte[] input) {
         scan = new Scanner(input);
@@ -149,8 +150,13 @@ public class Parser {
 
     // funções auxiliares
 
+    public String XMLOutput () {
+        return xmlOutput;
+    }
+
     private void printNonTerminal (String nterminal) {
-        System.out.println("<"+nterminal+">");
+        //System.out.println("<"+nterminal+">");
+        xmlOutput += String.format ("<%s>\n",nterminal);
     }
 
     private boolean isOperator (TokenType type) {
@@ -180,7 +186,8 @@ public class Parser {
     private void expectPeek (TokenType type) {
         if (peekToken.type == type ) {
             nextToken();
-            System.out.println(currentToken);
+            //System.out.println(currentToken);
+            xmlOutput += String.format ("%s\n",currentToken.toString());
         } else {
             throw new Error("Syntax error - expected "+type+" found " + peekToken.lexeme);
         }

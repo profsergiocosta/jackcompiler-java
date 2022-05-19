@@ -29,9 +29,10 @@ public class App
         
         //String input = "let a[4] = 10 - 5;";
         //String input = "if (10) { let a[4] = 10 - 5; }";
-        String input = "return 10;";
+        String input = "let a = ;";
         Parser p = new Parser(input.getBytes());
         p.parse();
+        System.out.println(p.XMLOutput());
         
         //String input = "45 preco2 + 96";
 
