@@ -275,16 +275,36 @@ public class Parser {
             case NUMBER:
                 expectPeek(NUMBER);
                 break;
-            case IDENTIFIER:
-                expectPeek(IDENTIFIER);
-                break;
             case STRING:
                 expectPeek(STRING);
                 break;
             case FALSE:
             case NULL:
             case TRUE:
-                expectPeek(FALSE, NULL, TRUE);
+            case THIS:
+                expectPeek(FALSE, NULL, TRUE, THIS);
+                break;
+            case IDENTIFIER:
+                expectPeek(IDENTIFIER);
+                if (peekTokenIs(LPAREN) || peekTokenIs(DOT)) {
+                    parseSubroutineCall();
+                } else { // variavel comum ou array
+                    if (peekTokenIs(LBRACKET)) { // array
+                        expectPeek(LBRACKET);
+                        parseExpression();
+                        expectPeek(RBRACKET);
+                    } 
+                }
+                break;
+            case LPAREN:
+                expectPeek(LPAREN);
+                parseExpression();
+                expectPeek(RPAREN);
+                break;
+            case MINUS:
+            case NOT:
+                expectPeek(MINUS, NOT);
+                parseTerm();
                 break;
             default:
                 ;
