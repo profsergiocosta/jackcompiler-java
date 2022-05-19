@@ -62,13 +62,13 @@ public class Token {
             categoria = "symbol";
             //Os símbolos <, >, ", e & são impressos como &lt;  &gt;  &quot; e &amp; Para não conflitar com o significado destes símbolos no XML
             if (valor == ">") {
-                valor = "&gt" ;
+                valor = "&gt;" ;
             } else if (valor == "<") {
-                valor = "&lt" ;
+                valor = "&lt;" ;
             } else if (valor == "\"") {
-                valor = "&quot" ;
+                valor = "&quot;" ;
             } else if (valor == "&") {
-                valor = "&amp" ;
+                valor = "&amp;" ;
             }
 
         } else if (categoria.equals("number")) {

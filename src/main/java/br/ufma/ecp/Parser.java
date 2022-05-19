@@ -149,13 +149,11 @@ public class Parser {
     }
 
     // funções auxiliares
-
     public String XMLOutput () {
         return xmlOutput;
     }
 
     private void printNonTerminal (String nterminal) {
-        //System.out.println("<"+nterminal+">");
         xmlOutput += String.format ("<%s>\n",nterminal);
     }
 
