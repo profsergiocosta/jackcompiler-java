@@ -12,53 +12,62 @@ import org.junit.Test;
 public class ParserTest extends SupportTest {
 
 
+
     @Test
-    public void testLetParse() {
+    public void testParserTerm() {
+        var input = "10";
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseTerm();
+        System.out.println(parser.XMLOutput());
+    }
+
+    @Test
+    public void testParserLet() {
         var input = "let a = 5+B-8;";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseLet();
+        //parser.parseLet();
         System.out.println(parser.XMLOutput());
     }
 
 
     @Test
-    public void testIfParse() {
+    public void testParserIf() {
         var input = "if (10) { let a[4] = 10 - 5; }";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseIf();
+        //parser.parseIf();
         System.out.println(parser.XMLOutput());
     }
 
     @Test
-    public void testDoParse() {
+    public void testParserDo() {
         var input = "do calcula(10);";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseDo();
+        //parser.parseDo();
         System.out.println(parser.XMLOutput());
     }
 
     @Test
-    public void testDoParseMethod() {
+    public void testParserDoMethod() {
         var input = "do ponto.distancia(10);";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseDo();
+        //parser.parseDo();
         System.out.println(parser.XMLOutput());
     }
 
 
     @Test
-    public void testDoParseExpressionList() {
+    public void testParserDoExpressionList() {
         var input = "do ponto.distancia(10, 20);";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseDo();
+        //parser.parseDo();
         System.out.println(parser.XMLOutput());
     }
 
     @Test
-    public void testClassVarDecParser() {
+    public void testParserClassVarDecParser() {
         var input = "field int a,b;";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseClassVarDec();
+        //parser.parseClassVarDec();
         System.out.println(parser.XMLOutput());
     }
 
@@ -66,7 +75,7 @@ public class ParserTest extends SupportTest {
     public void testParserSubroutineDec() {
         var input = "method void funcao (){var int a; let a = 10;}";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        parser.parseSubroutineDec();
+        //parser.parseSubroutineDec();
         System.out.println(parser.XMLOutput());
     }
 
