@@ -6,84 +6,73 @@ public class Parser {
 
     private Scanner scan;
     private Token currentToken;
+    private Token peekToken;
+    private String xmlOutput = "";
 
-    public Parser (byte[] input) {
+    public Parser(byte[] input) {
         scan = new Scanner(input);
         nextToken();
     }
 
+    void parse() {
+     
+    }
+
+    // term -> number | identifier
+    void parseTerm() {
+        printNonTerminal("term");
+        switch (peekToken.type) {
+            case NUMBER:
+                expectPeek(NUMBER);
+                break;
+            case IDENTIFIER:
+                expectPeek(IDENTIFIER);
+                break;
+            default:
+                ;
+        }
+        printNonTerminal("/term");
+    }
+
+    public String XMLOutput() {
+        return xmlOutput;
+    }
+
+    private void printNonTerminal(String nterminal) {
+        xmlOutput += String.format("<%s>\r\n", nterminal);
+    }
+
     private void nextToken() {
-        currentToken = scan.nextToken();
+        currentToken = peekToken;
+        peekToken = scan.nextToken();
     }
 
-    private void match (TokenType type) {
-        if (currentToken.type == type ) {
+
+
+    boolean peekTokenIs(TokenType type) {
+        return peekToken.type == type;
+    }
+
+    private void expectPeek(TokenType... types) {
+        for (TokenType type : types) {
+            if (peekToken.type == type) {
+                expectPeek(type);
+                return;
+            }
+        }
+
+        throw new Error("Syntax error");
+
+    }
+
+    private void expectPeek(TokenType type) {
+        if (peekToken.type == type) {
             nextToken();
+            // System.out.println(currentToken);
+            xmlOutput += String.format("%s\r\n", currentToken.toString());
         } else {
-            throw new Error("Syntax error - expected "+type+" found " + currentToken.lexeme);
+            throw new Error("Syntax error - expected " + type + " found " + peekToken.lexeme);
         }
     }
-
-    void parser () {
-        expr();
-    }
-
-    void expr () {
-        term();
-        oper();
-    }
-
-    void term () {
-        if (currentTokenIs (NUMBER)) {
-            number();
-        } else if (currentTokenIs (IDENTIFIER)) {
-            identifier();
-        } else {
-            throw new Error ("syntax error found " + currentToken.lexeme);
-        }
-    }
-
-    /*
-    oper -> + term oper
-     | - term oper
-     | ϵ 
-
-    term -> number | identifier
-     */
-    void oper () {
-        if (currentTokenIs (PLUS)) {
-            match(PLUS);
-            term();
-            System.out.println("add");
-            oper();
-        } else if (currentTokenIs (MINUS)) {
-            match(MINUS);
-            term();
-            System.out.println("sub");
-            oper();
-        } else if (currentTokenIs(EOF)) {
-            // to de boa
-        } else {
-            throw new Error ("syntax error found " + currentToken.lexeme);
-        }
-
-    }
-
- 
-    void number () {
-        System.out.println("push " + currentToken.lexeme);
-        match (NUMBER);
-    }
-
-    void identifier () {
-        System.out.println("push " + currentToken.lexeme);
-        match (IDENTIFIER);
-    }
-
-    boolean currentTokenIs (TokenType type) {
-        return currentToken.type == type;
-    }
-
-  
 
 }
