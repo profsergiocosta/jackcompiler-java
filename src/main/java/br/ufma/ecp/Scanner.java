@@ -54,61 +54,61 @@ public class Scanner {
 
             case '+':
                 advance();
-                return new Token (TokenType.PLUS,"+");
+                return new TSymbol (TokenType.PLUS,"+");
             case '-':
                 advance();
-                return new Token (TokenType.MINUS,"-"); 
+                return new TSymbol (TokenType.MINUS,"-"); 
             case '*':
                 advance();
-                return new Token (TokenType.ASTERISK,"*"); 
+                return new TSymbol (TokenType.ASTERISK,"*"); 
             case '.':
                 advance();
-                return new Token (TokenType.DOT,"."); 
+                return new TSymbol (TokenType.DOT,"."); 
             case '&':
                 advance();
-                return new Token (TokenType.AND,"&"); 
+                return new TSymbol (TokenType.AND,"&"); 
             case '|':
                 advance();
-                return new Token (TokenType.OR,"|"); 
+                return new TSymbol (TokenType.OR,"|"); 
             case '~':
                 advance();
-                return new Token (TokenType.NOT,"~"); 
+                return new TSymbol (TokenType.NOT,"~"); 
 
 
             case '>':
                 advance();
-                return new Token (TokenType.GT,">"); 
+                return new TSymbol (TokenType.GT,">"); 
             case '<':
                 advance();
-                return new Token (TokenType.LT,"<"); 
+                return new TSymbol (TokenType.LT,"<"); 
             case '=':
                 advance();
-                return new Token (TokenType.EQ,"="); 
+                return new TSymbol (TokenType.EQ,"="); 
 
             case '(':
                 advance();
-                return new Token (TokenType.LPAREN,"("); 
+                return new TSymbol (TokenType.LPAREN,"("); 
             case ')':
                 advance();
-                return new Token (TokenType.RPAREN,")"); 
+                return new TSymbol (TokenType.RPAREN,")"); 
             case '{':
                 advance();
-                return new Token (TokenType.LBRACE,"{"); 
+                return new TSymbol (TokenType.LBRACE,"{"); 
             case '}':
                 advance();
-                return new Token (TokenType.RBRACE,"}"); 
+                return new TSymbol (TokenType.RBRACE,"}"); 
             case '[':
                 advance();
-                return new Token (TokenType.LBRACKET,"["); 
+                return new TSymbol (TokenType.LBRACKET,"["); 
             case ']':
                 advance();
-                return new Token (TokenType.RBRACKET,"]"); 
+                return new TSymbol (TokenType.RBRACKET,"]"); 
             case ';':
                 advance();
-                return new Token (TokenType.SEMICOLON,";"); 
+                return new TSymbol (TokenType.SEMICOLON,";"); 
             case ',':
                 advance();
-                return new Token (TokenType.COMMA,","); 
+                return new TSymbol (TokenType.COMMA,","); 
 
             case 0:
                 return new Token(TokenType.EOF, "EOF");  
@@ -176,7 +176,7 @@ public class Scanner {
             advance();
         }
         String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new Token (TokenType.STRING,s);
+        Token token = new TStringConst (TokenType.STRING,s);
         advance();
         return token;
     }
@@ -187,9 +187,13 @@ public class Scanner {
         }
         String id = new String(input, start, current-start, StandardCharsets.UTF_8);
         TokenType type = Token.keyword(id);
-        if (type == null) type = TokenType.IDENTIFIER;
-        Token token = new Token (type,id);
-        return token;
+        if (type == null) {
+            type = TokenType.IDENTIFIER;
+            return new TIdentifier (type,id);
+        } else {
+            return new Tkeyword (type,id);
+        }
+        
     }
 
     private Token number () {
@@ -197,7 +201,7 @@ public class Scanner {
             advance();
         }
         String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new Token (TokenType.NUMBER,s);
+        Token token = new TIntConst (TokenType.NUMBER,s);
         return token;
     }
 
