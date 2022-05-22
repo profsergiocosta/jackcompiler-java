@@ -8,6 +8,9 @@ import br.ufma.ecp.token.TokenType;
 
 public class Parser {
 
+
+    private static class ParseError extends RuntimeException {}
+
     private Scanner scan;
     private Token currentToken;
     private Token peekToken;
@@ -230,7 +233,7 @@ public class Parser {
                 parseDo();
                 break;
             default:
-                throw new Error("Syntax error - expected a statement");
+                throw error(peekToken, "Expected a statement");
         }
     }
 
@@ -349,7 +352,8 @@ public class Parser {
             }
         }
 
-        throw new Error("Syntax error");
+        //throw new Error("Syntax error");
+        throw error(peekToken, "Expected a statement");
 
     }
 
@@ -358,8 +362,28 @@ public class Parser {
             nextToken();
             xmlOutput.append(String.format("%s\r\n", currentToken.toString()));
         } else {
-            throw new Error("Syntax error - expected " + type + " found " + peekToken.type);
+            //throw new Error("Syntax error - expected " + type + " found " + peekToken.type);
+            throw error(peekToken, "Expected "+type.valueOf);
         }
     }
+
+
+    private static void report(int line, String where,
+        String message) {
+            System.err.println(
+            "[line " + line + "] Error" + where + ": " + message);
+    }
+
+
+    private ParseError error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.value() + "'", message);
+        }
+        return new ParseError();
+    }
+
+
 
 }

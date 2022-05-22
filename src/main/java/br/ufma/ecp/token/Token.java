@@ -37,10 +37,16 @@ public class Token {
     }
     
     public final TokenType type;
+    public final int line;
    // protected final String lexeme;
 
-    public Token (TokenType type) {
+    public Token (TokenType type, int line) {
         this.type = type;
+        this.line = line;
+    }
+
+    public String value () {
+        return type.valueOf;
     }
 
     static public boolean isSymbol (String c) {
@@ -52,33 +58,7 @@ public class Token {
         return keywords.get(id);
     }
 
-    /*
-    public String toString() {
-        String categoria = type.toString().toLowerCase();
 
-        String valor = lexeme;
-        if (isSymbol(lexeme)) {
-            categoria = "symbol";
-            //Os símbolos <, >, ", e & são impressos como &lt;  &gt;  &quot; e &amp; Para não conflitar com o significado destes símbolos no XML
-            if (valor == ">") {
-                valor = "&gt;" ;
-            } else if (valor == "<") {
-                valor = "&lt;" ;
-            } else if (valor == "\"") {
-                valor = "&quot;" ;
-            } else if (valor == "&") {
-                valor = "&amp;" ;
-            }
 
-        } else if (categoria.equals("number")) {
-            categoria = "integerConstant";
-        } else if (Token.keyword(lexeme) != null) {
-            categoria = "keyword";
-        } else if (categoria.equals("string")) {
-            categoria = "stringConstant";
-        }
-        return "<" + categoria + "> " + valor  + " </" + categoria + ">";
-    }
-    */
     
 }

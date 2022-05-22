@@ -2,11 +2,11 @@ package br.ufma.ecp.token;
 
 public enum TokenType {
  
-    STRING,
+    STRING("string"),
 
-    NUMBER,
+    NUMBER("integer"),
 
-    IDENTIFIER,
+    IDENTIFIER("identifier"),
 
     // keywords
     WHILE("while"), CLASS("class"),CONSTRUCTOR("constructor"),FUNCTION("function"),

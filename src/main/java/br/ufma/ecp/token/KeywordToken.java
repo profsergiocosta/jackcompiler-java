@@ -2,8 +2,8 @@ package br.ufma.ecp.token;
 
 public class KeywordToken extends Token {
 
-    public KeywordToken(TokenType type) {
-        super(type);
+    public KeywordToken(TokenType type, int line) {
+        super(type, line);
     }
 
     public String toString() {

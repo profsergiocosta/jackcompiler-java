@@ -2,8 +2,8 @@ package br.ufma.ecp.token;
 
 public class SymbolToken extends Token {
 
-    public SymbolToken(TokenType type) {
-        super(type);
+    public SymbolToken(TokenType type, int line) {
+        super(type,line);
     }
 
     public String toString() {
