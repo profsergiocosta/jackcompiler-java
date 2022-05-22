@@ -16,6 +16,7 @@ public enum TokenType {
     ELSE("else"), RETURN("return"),
 
 
+    // Symbols
     PLUS("+"),
     EQ("="),
     MINUS("-"),
