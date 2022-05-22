@@ -1,12 +1,7 @@
 package br.ufma.ecp;
 
-import java.io.EOFException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.util.ElementScanner14;
 
 public class Scanner {
 

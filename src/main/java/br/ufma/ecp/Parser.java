@@ -7,7 +7,8 @@ public class Parser {
     private Scanner scan;
     private Token currentToken;
     private Token peekToken;
-    private String xmlOutput = "";
+    //private String xmlOutput = "";
+    private StringBuilder xmlOutput = new StringBuilder();
 
     public Parser(byte[] input) {
         scan = new Scanner(input);
@@ -314,11 +315,11 @@ public class Parser {
 
     // funções auxiliares
     public String XMLOutput() {
-        return xmlOutput;
+        return xmlOutput.toString();
     }
 
     private void printNonTerminal(String nterminal) {
-        xmlOutput += String.format("<%s>\r\n", nterminal);
+        xmlOutput.append(String.format("<%s>\r\n", nterminal));
     }
 
     private boolean isOperator(TokenType type) {
@@ -348,8 +349,7 @@ public class Parser {
     private void expectPeek(TokenType type) {
         if (peekToken.type == type) {
             nextToken();
-            // System.out.println(currentToken);
-            xmlOutput += String.format("%s\r\n", currentToken.toString());
+            xmlOutput.append(String.format("%s\r\n", currentToken.toString()));
         } else {
             throw new Error("Syntax error - expected " + type + " found " + peekToken.lexeme);
         }

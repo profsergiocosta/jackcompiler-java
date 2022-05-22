@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-
-import static br.ufma.ecp.TokenType.*;
 public class App 
 {
 
