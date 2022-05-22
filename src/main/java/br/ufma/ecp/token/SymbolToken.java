@@ -7,7 +7,7 @@ public class SymbolToken extends Token {
     }
 
     public String toString() {
-        var valor = type.valueOf;
+        var valor = type.value;
 
         // Os símbolos <, >, ", e & são impressos como &lt;  &gt;  &quot; e &amp; Para
         // não conflitar com o significado destes símbolos no XML

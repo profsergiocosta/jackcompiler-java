@@ -1,7 +1,12 @@
 package br.ufma.ecp.token;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum TokenType {
  
+    
+
     STRING("string"),
 
     NUMBER("integer"),
@@ -40,9 +45,9 @@ public enum TokenType {
     RBRACKET("]"),
 
 
-    EOF, 
+    EOF("EOF"), 
 
-    ILLEGAL;
+    ILLEGAL("ILLEGAL");
 
 
      // symbols
@@ -80,10 +85,36 @@ public enum TokenType {
     private TokenType() {
     }
 
-    private TokenType(String valueOf) {
-        this.valueOf = valueOf;
+    private TokenType(String value) {
+        this.value = value;
     }
 
-    public String valueOf;
+    public String value;
+
+
+    public static TokenType fromValue(String value) {
+        return Arrays.stream(TokenType.values())
+                .filter(symbolType -> symbolType.value.equals(value))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+    static public boolean isSymbol (char c) {
+        String symbols = "{}()[].,;+-*/&|<>=~";
+        return symbols.indexOf(c) > -1;
+    }
+
+    static public boolean isOperator(TokenType type) {
+        return "+-*/<>=~&|".contains(type.value);
+    }
+
+    static public TokenType keyword (String value) {
+        if (List.of("EOF","ILLEGAL","identifier","integer","string").contains(value))
+            return null;
+        else return fromValue(value);
+    }
+
+
     
 }

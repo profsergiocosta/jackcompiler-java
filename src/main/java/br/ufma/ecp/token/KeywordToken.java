@@ -7,7 +7,7 @@ public class KeywordToken extends Token {
     }
 
     public String toString() {
-        return "<keyword> " + type.valueOf  + " </keyword>";
+        return "<keyword> " + type.value  + " </keyword>";
     }
     
 }

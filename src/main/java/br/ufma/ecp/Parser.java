@@ -330,11 +330,6 @@ public class Parser {
         xmlOutput.append(String.format("<%s>\r\n", nterminal));
     }
 
-    private boolean isOperator(TokenType type) {
-        //return type.ordinal() >= PLUS.ordinal() && type.ordinal() <= EQ.ordinal();
-        return "+-*/<>=~&|".contains(type.valueOf);
-    }
-
 
     boolean peekTokenIs(TokenType type) {
         return peekToken.type == type;
@@ -363,7 +358,7 @@ public class Parser {
             xmlOutput.append(String.format("%s\r\n", currentToken.toString()));
         } else {
             //throw new Error("Syntax error - expected " + type + " found " + peekToken.type);
-            throw error(peekToken, "Expected "+type.valueOf);
+            throw error(peekToken, "Expected "+type.value);
         }
     }
 

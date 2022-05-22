@@ -6,9 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 
-import br.ufma.ecp.token.Token;
-import br.ufma.ecp.token.TokenType;
-
 public class App 
 {
 
@@ -30,10 +27,12 @@ public class App
     {
 
 
+ 
+
         var input = """
             if ( direction = 1) { 
             // teste    
-            let \"sss\" = 10;
+            let string = 10;
         
             }
         """
