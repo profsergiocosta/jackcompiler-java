@@ -2,6 +2,7 @@ package br.ufma.ecp;
 
 import static br.ufma.ecp.token.TokenType.*;
 
+import br.ufma.ecp.token.KeywordToken;
 import br.ufma.ecp.token.SymbolToken;
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
@@ -34,17 +35,11 @@ public class Parser {
         expectPeek(IDENTIFIER);
         expectPeek(LBRACE);
         
-        /*
-        while (peekToken instanceof SymbolToken t && (t.type == STATIC ||  t.type == FIELD)  ) {
-            parseClassVarDec();
-
-        }
-*/
-      
         while (peekTokenIs(STATIC) || peekTokenIs(FIELD)) {
+            System.out.println(peekToken);
             parseClassVarDec();
         }
-        
+    
         while (peekTokenIs(FUNCTION) || peekTokenIs(CONSTRUCTOR) || peekTokenIs(METHOD)) {
             parseSubroutineDec();
         }
