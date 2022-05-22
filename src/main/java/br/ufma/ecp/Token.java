@@ -53,6 +53,7 @@ public class Token {
         return keywords.get(id);
     }
 
+    /*
     public String toString() {
         String categoria = type.toString().toLowerCase();
 
@@ -79,5 +80,6 @@ public class Token {
         }
         return "<" + categoria + "> " + valor  + " </" + categoria + ">";
     }
+    */
     
 }

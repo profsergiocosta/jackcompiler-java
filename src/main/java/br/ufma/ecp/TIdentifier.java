@@ -5,5 +5,9 @@ public class TIdentifier extends Token {
     public TIdentifier(TokenType type, String lexeme) {
         super(type, lexeme);
     }
+
+    public String toString() {
+        return "<identifier> " + lexeme  + " </identifier>";
+    }
     
 }
