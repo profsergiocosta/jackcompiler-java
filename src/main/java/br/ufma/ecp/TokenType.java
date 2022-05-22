@@ -15,10 +15,38 @@ public enum TokenType {
     NULL,THIS,LET,DO,IF,ELSE, RETURN,
 
 
+    PLUS("+"),
+    EQ("="),
+    MINUS("-"),
+    ASTERISK("*"),
+    SLASH("/"),
+    AND("&"),
+    OR("|"),
+    NOT("~"),
+    
+    LT("<"),
+    GT(">"),
+
+    DOT("."),
+    COMMA(","),
+    SEMICOLON(";"),
+    LPAREN("("),
+    RPAREN(")"),
+    LBRACE("{"),
+    RBRACE("}"),
+    LBRACKET("["),
+    RBRACKET("]"),
+
+
+    EOF, 
+
+    ILLEGAL;
+
+
      // symbols
     // delimitator
-
-    LPAREN,
+/*
+    LPAREN('('),
     RPAREN,
     LBRACE,
     RBRACE,
@@ -43,10 +71,17 @@ public enum TokenType {
     GT,
     EQ,
 
+*/
 
 
-    EOF, 
 
-    ILLEGAL
+    private TokenType() {
+    }
+
+    private TokenType(String c) {
+        this.c = c;
+    }
+
+    String c;
     
 }

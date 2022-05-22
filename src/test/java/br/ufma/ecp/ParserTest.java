@@ -12,7 +12,7 @@ public class ParserTest extends TestSupport {
 
     @Test
     public void testParseLetSimple() {
-        var input = "let a = 5+B-8;";
+        var input = "let a = 5+10-8;";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
         parser.parseLet();
         System.out.println(parser.XMLOutput());

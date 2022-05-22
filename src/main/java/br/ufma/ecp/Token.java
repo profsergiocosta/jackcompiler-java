@@ -37,7 +37,7 @@ public class Token {
     }
     
     final TokenType type;
-    final String lexeme;
+    protected final String lexeme;
 
     public Token (TokenType type, String lexeme) {
         this.type = type;

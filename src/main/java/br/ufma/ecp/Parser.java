@@ -29,10 +29,18 @@ public class Parser {
         expectPeek(CLASS);
         expectPeek(IDENTIFIER);
         expectPeek(LBRACE);
+        
+        
+        while (peekToken instanceof TSymbol t && (t.type == STATIC ||  t.type == FIELD)  ) {
+            parseClassVarDec();
 
+        }
+
+        /*
         while (peekTokenIs(STATIC) || peekTokenIs(FIELD)) {
             parseClassVarDec();
         }
+        */
 
         while (peekTokenIs(FUNCTION) || peekTokenIs(CONSTRUCTOR) || peekTokenIs(METHOD)) {
             parseSubroutineDec();
@@ -323,7 +331,8 @@ public class Parser {
     }
 
     private boolean isOperator(TokenType type) {
-        return type.ordinal() >= PLUS.ordinal() && type.ordinal() <= EQ.ordinal();
+        //return type.ordinal() >= PLUS.ordinal() && type.ordinal() <= EQ.ordinal();
+        return "+-*/<>=".contains(type.c);
     }
 
     boolean peekTokenIs(TokenType type) {
