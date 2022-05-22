@@ -1,9 +1,9 @@
 package br.ufma.ecp;
 
-public class Tkeyword extends Token {
+public class KeywordToken extends Token {
 
-    public Tkeyword(TokenType type, String lexeme) {
-        super(type, lexeme);
+    public KeywordToken(TokenType type) {
+        super(type);
     }
 
     public String toString() {

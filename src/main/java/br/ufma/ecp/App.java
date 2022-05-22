@@ -27,7 +27,7 @@ public class App
 
         var a = TokenType.RBRACKET;
         System.out.println(a.valueOf);
-        /*
+     
         var input = fromFile();
         var scanner = new Scanner(input.getBytes(StandardCharsets.UTF_8));
         var result = new StringBuilder();
@@ -41,7 +41,6 @@ public class App
         result.append("</tokens>\r\n");
         System.out.println(result.toString());
 
-        */
         //String input = "let a[4] = 10 - 5;";
         //String input = "if (10) { let a[4] = 10 - 5; }";
         //String input = "let a = ;";

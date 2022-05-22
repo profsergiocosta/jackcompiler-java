@@ -49,72 +49,72 @@ public class Scanner {
                 }
                 else {
                     advance();
-                    return new Token (TokenType.SLASH,"/");
+                    return new Token (TokenType.SLASH);
                 }
 
             case '+':
                 advance();
-                return new TSymbol (TokenType.PLUS,"+");
+                return new SymbolToken (TokenType.PLUS);
             case '-':
                 advance();
-                return new TSymbol (TokenType.MINUS,"-"); 
+                return new SymbolToken (TokenType.MINUS); 
             case '*':
                 advance();
-                return new TSymbol (TokenType.ASTERISK,"*"); 
+                return new SymbolToken (TokenType.ASTERISK); 
             case '.':
                 advance();
-                return new TSymbol (TokenType.DOT,"."); 
+                return new SymbolToken (TokenType.DOT); 
             case '&':
                 advance();
-                return new TSymbol (TokenType.AND,"&"); 
+                return new SymbolToken (TokenType.AND); 
             case '|':
                 advance();
-                return new TSymbol (TokenType.OR,"|"); 
+                return new SymbolToken (TokenType.OR); 
             case '~':
                 advance();
-                return new TSymbol (TokenType.NOT,"~"); 
+                return new SymbolToken (TokenType.NOT); 
 
 
             case '>':
                 advance();
-                return new TSymbol (TokenType.GT,">"); 
+                return new SymbolToken (TokenType.GT); 
             case '<':
                 advance();
-                return new TSymbol (TokenType.LT,"<"); 
+                return new SymbolToken (TokenType.LT); 
             case '=':
                 advance();
-                return new TSymbol (TokenType.EQ,"="); 
+                return new SymbolToken (TokenType.EQ); 
 
             case '(':
                 advance();
-                return new TSymbol (TokenType.LPAREN,"("); 
+                return new SymbolToken (TokenType.LPAREN); 
             case ')':
                 advance();
-                return new TSymbol (TokenType.RPAREN,")"); 
+                return new SymbolToken (TokenType.RPAREN); 
             case '{':
                 advance();
-                return new TSymbol (TokenType.LBRACE,"{"); 
+                return new SymbolToken (TokenType.LBRACE); 
             case '}':
                 advance();
-                return new TSymbol (TokenType.RBRACE,"}"); 
+                return new SymbolToken (TokenType.RBRACE); 
             case '[':
                 advance();
-                return new TSymbol (TokenType.LBRACKET,"["); 
+                return new SymbolToken (TokenType.LBRACKET); 
             case ']':
                 advance();
-                return new TSymbol (TokenType.RBRACKET,"]"); 
+                return new SymbolToken (TokenType.RBRACKET); 
             case ';':
                 advance();
-                return new TSymbol (TokenType.SEMICOLON,";"); 
+                return new SymbolToken (TokenType.SEMICOLON); 
             case ',':
                 advance();
-                return new TSymbol (TokenType.COMMA,","); 
+                return new SymbolToken (TokenType.COMMA); 
 
             case 0:
-                return new Token(TokenType.EOF, "EOF");  
+                return new Token(TokenType.EOF);  
             default:
                 advance(); 
-                return new Token(TokenType.ILLEGAL, Character.toString(ch));
+                return new IllegalToken(TokenType.ILLEGAL,ch);
         }
 
 
@@ -176,7 +176,7 @@ public class Scanner {
             advance();
         }
         String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new TStringConst (TokenType.STRING,s);
+        Token token = new StringToken (TokenType.STRING,s);
         advance();
         return token;
     }
@@ -189,9 +189,9 @@ public class Scanner {
         TokenType type = Token.keyword(id);
         if (type == null) {
             type = TokenType.IDENTIFIER;
-            return new TIdentifier (type,id);
+            return new IdentifierToken (type,id);
         } else {
-            return new Tkeyword (type,id);
+            return new KeywordToken (type);
         }
         
     }
@@ -201,7 +201,7 @@ public class Scanner {
             advance();
         }
         String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new TIntConst (TokenType.NUMBER,s);
+        Token token = new IntegerToken (TokenType.NUMBER,s);
         return token;
     }
 

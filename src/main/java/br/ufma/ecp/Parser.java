@@ -31,7 +31,7 @@ public class Parser {
         expectPeek(LBRACE);
         
         
-        while (peekToken instanceof TSymbol t && (t.type == STATIC ||  t.type == FIELD)  ) {
+        while (peekToken instanceof SymbolToken t && (t.type == STATIC ||  t.type == FIELD)  ) {
             parseClassVarDec();
 
         }
@@ -361,7 +361,7 @@ public class Parser {
             nextToken();
             xmlOutput.append(String.format("%s\r\n", currentToken.toString()));
         } else {
-            throw new Error("Syntax error - expected " + type + " found " + peekToken.lexeme);
+            throw new Error("Syntax error - expected " + type + " found " + peekToken.type);
         }
     }
 
