@@ -7,7 +7,7 @@ public class TSymbol extends Token {
     }
 
     public String toString() {
-        return "<symbol> " + type.c  + " </symbol>";
+        return "<symbol> " + type.valueOf  + " </symbol>";
     }
     
 }

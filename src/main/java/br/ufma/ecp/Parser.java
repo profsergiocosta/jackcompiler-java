@@ -332,8 +332,9 @@ public class Parser {
 
     private boolean isOperator(TokenType type) {
         //return type.ordinal() >= PLUS.ordinal() && type.ordinal() <= EQ.ordinal();
-        return "+-*/<>=".contains(type.c);
+        return "+-*/<>=~&|".contains(type.valueOf);
     }
+
 
     boolean peekTokenIs(TokenType type) {
         return peekToken.type == type;

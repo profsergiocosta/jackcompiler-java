@@ -26,7 +26,7 @@ public class App
     {
 
         var a = TokenType.RBRACKET;
-        System.out.println(a.c);
+        System.out.println(a.valueOf);
         /*
         var input = fromFile();
         var scanner = new Scanner(input.getBytes(StandardCharsets.UTF_8));

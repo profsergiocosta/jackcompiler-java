@@ -7,7 +7,7 @@ public class Tkeyword extends Token {
     }
 
     public String toString() {
-        return "<keyword> " + lexeme  + " </keyword>";
+        return "<keyword> " + type.valueOf  + " </keyword>";
     }
     
 }
