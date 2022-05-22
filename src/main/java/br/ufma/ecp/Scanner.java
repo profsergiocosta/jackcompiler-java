@@ -185,7 +185,7 @@ public class Scanner {
             advance();
         }
         String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new StringToken (TokenType.STRING,s);
+        Token token = new StringToken (s);
         advance();
         return token;
     }
@@ -198,7 +198,7 @@ public class Scanner {
         TokenType type = Token.keyword(id);
         if (type == null) {
             type = TokenType.IDENTIFIER;
-            return new IdentifierToken (type,id);
+            return new IdentifierToken (id);
         } else {
             return new KeywordToken (type);
         }
@@ -210,7 +210,7 @@ public class Scanner {
             advance();
         }
         String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new IntegerToken (TokenType.NUMBER,s);
+        Token token = new IntegerToken (s);
         return token;
     }
 

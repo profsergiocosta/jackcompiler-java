@@ -4,8 +4,8 @@ public class IdentifierToken extends Token {
 
     String lexeme;
 
-    public IdentifierToken(TokenType type, String lexeme) {
-        super(type);
+    public IdentifierToken(String lexeme) {
+        super(TokenType.IDENTIFIER);
         this.lexeme = lexeme;
 
     }

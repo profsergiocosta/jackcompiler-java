@@ -1,11 +1,12 @@
 package br.ufma.ecp.token;
 
+
 public class StringToken extends Token {
 
     String lexeme;
 
-    public StringToken(TokenType type, String lexeme) {
-        super(type);
+    public StringToken(String lexeme) {
+        super(TokenType.STRING);
         this.lexeme = lexeme;
 
     }

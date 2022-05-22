@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import br.ufma.ecp.token.SymbolToken;
+
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
 

@@ -2,8 +2,7 @@ package br.ufma.ecp;
 
 import static br.ufma.ecp.token.TokenType.*;
 
-import br.ufma.ecp.token.KeywordToken;
-import br.ufma.ecp.token.SymbolToken;
+
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
 

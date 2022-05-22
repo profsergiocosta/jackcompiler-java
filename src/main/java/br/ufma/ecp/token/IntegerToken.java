@@ -4,8 +4,8 @@ public class IntegerToken extends Token {
 
     String lexeme;
 
-    public IntegerToken(TokenType type, String lexeme) {
-        super(type);
+    public IntegerToken(String lexeme) {
+        super(TokenType.NUMBER);
         this.lexeme = lexeme;
     }
 
