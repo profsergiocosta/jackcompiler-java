@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+import br.ufma.ecp.token.SymbolToken;
+import br.ufma.ecp.token.Token;
+import br.ufma.ecp.token.TokenType;
+
 public class App 
 {
 
@@ -27,6 +31,9 @@ public class App
 
         var a = TokenType.RBRACKET;
         System.out.println(a.valueOf);
+
+        
+  
      
         var input = fromFile();
         var scanner = new Scanner(input.getBytes(StandardCharsets.UTF_8));

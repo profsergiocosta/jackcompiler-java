@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
 
+import br.ufma.ecp.token.Token;
+import br.ufma.ecp.token.TokenType;
+
 
 
 public class ScannerTest extends TestSupport {

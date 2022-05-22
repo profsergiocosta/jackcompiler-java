@@ -1,4 +1,4 @@
-package br.ufma.ecp;
+package br.ufma.ecp.token;
 
 public class StringToken extends Token {
 

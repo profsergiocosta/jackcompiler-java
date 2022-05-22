@@ -1,4 +1,4 @@
-package br.ufma.ecp;
+package br.ufma.ecp.token;
 
 
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class Token {
 
     }
     
-    final TokenType type;
+    public final TokenType type;
    // protected final String lexeme;
 
     public Token (TokenType type) {

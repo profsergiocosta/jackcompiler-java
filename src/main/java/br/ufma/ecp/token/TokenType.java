@@ -1,4 +1,4 @@
-package br.ufma.ecp;
+package br.ufma.ecp.token;
 
 public enum TokenType {
  
@@ -83,6 +83,6 @@ public enum TokenType {
         this.valueOf = valueOf;
     }
 
-    String valueOf;
+    public String valueOf;
     
 }
