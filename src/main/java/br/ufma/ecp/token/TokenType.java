@@ -7,11 +7,11 @@ public enum TokenType {
  
     
 
-    STRING("string"),
+    STRING(),
 
-    NUMBER("integer"),
+    NUMBER(),
 
-    IDENTIFIER("identifier"),
+    IDENTIFIER(),
 
     // keywords
     WHILE("while"), CLASS("class"),CONSTRUCTOR("constructor"),FUNCTION("function"),
@@ -45,41 +45,7 @@ public enum TokenType {
     RBRACKET("]"),
 
 
-    EOF("EOF"), 
-
-    ILLEGAL("ILLEGAL");
-
-
-     // symbols
-    // delimitator
-/*
-    LPAREN('('),
-    RPAREN,
-    LBRACE,
-    RBRACE,
-    LBRACKET,
-    RBRACKET,
-
-    COMMA,
-    SEMICOLON,
-    DOT,
-
-    // operators
-    PLUS,
-    MINUS,
-    ASTERISK,
-    SLASH,
-
-    AND,
-    OR,
-    NOT,
-
-    LT,
-    GT,
-    EQ,
-
-*/
-
+    EOF();
 
 
     private TokenType() {
@@ -94,7 +60,7 @@ public enum TokenType {
 
     public static TokenType fromValue(String value) {
         return Arrays.stream(TokenType.values())
-                .filter(symbolType -> symbolType.value.equals(value))
+                .filter(symbolType -> symbolType.value != null && symbolType.value.equals(value))
                 .findFirst()
                 .orElse(null);
     }
@@ -110,9 +76,7 @@ public enum TokenType {
     }
 
     static public TokenType keyword (String value) {
-        if (List.of("EOF","ILLEGAL","identifier","integer","string").contains(value))
-            return null;
-        else return fromValue(value);
+      return fromValue(value);
     }
 
 

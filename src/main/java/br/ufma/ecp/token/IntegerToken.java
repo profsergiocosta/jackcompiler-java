@@ -13,7 +13,7 @@ public class IntegerToken extends Token {
         return "<integerConstant> " + lexeme  + " </integerConstant>";
     }
 
-    public String value () {
+       public String value () {
         return lexeme;
     }
     
