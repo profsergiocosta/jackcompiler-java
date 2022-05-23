@@ -8,13 +8,13 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public class ParserTest extends SupportTest {
+public class ParserTest extends TestSupport {
 
     @Test
     public void testParseLetSimple() {
-        var input = "let a = 5+B-8;";
+        var input = "let string = 5+10-8;";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        //parser.parseLet();
+        parser.parseLet();
         System.out.println(parser.XMLOutput());
     }
 
@@ -23,7 +23,7 @@ public class ParserTest extends SupportTest {
     public void testParseLet() {
         var input = "let square = Square.new(0, 0, 30);";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        //parser.parseLet();
+        parser.parseLet();
         var expectedResult =  """
         <letStatement>
         <keyword> let </keyword>
@@ -103,7 +103,7 @@ public class ParserTest extends SupportTest {
                 """;
 
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        ///parser.parseIf();
+        parser.parseIf();
         var result = parser.XMLOutput();
         expectedResult = expectedResult.replaceAll("  ", "");
         result = result.replaceAll("\r", ""); // no codigo em linux não tem o retorno de carro
@@ -114,7 +114,7 @@ public class ParserTest extends SupportTest {
     public void testParseDo() {
         var input = "do Sys.wait(5);";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-       // parser.parseDo();
+        parser.parseDo();
 
         var expectedResult = """
             <doStatement>
@@ -145,7 +145,7 @@ public class ParserTest extends SupportTest {
     public void testParseClassVarDec() {
         var input = "field Square square;";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        //parser.parseClassVarDec();
+        parser.parseClassVarDec();
         var expectedResult = """
             <classVarDec>
             <keyword> field </keyword>
@@ -173,7 +173,7 @@ public class ParserTest extends SupportTest {
              }
                 """;;
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
-        //parser.parseSubroutineDec();
+        parser.parseSubroutineDec();
         var expectedResult = """
             <subroutineDec>
             <keyword> constructor </keyword>

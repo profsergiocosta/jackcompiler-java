@@ -1,9 +1,14 @@
 package br.ufma.ecp;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
+import br.ufma.ecp.token.IdentifierToken;
+import br.ufma.ecp.token.IntegerToken;
+import br.ufma.ecp.token.KeywordToken;
+import br.ufma.ecp.token.StringToken;
+import br.ufma.ecp.token.SymbolToken;
+import br.ufma.ecp.token.Token;
+import br.ufma.ecp.token.TokenType;
 
 public class Scanner {
 
@@ -11,56 +16,92 @@ public class Scanner {
     private int current;
     private int start;
 
-    private static final Map<String, TokenType> keywords;
+    private int line = 1;
 
-    static {
-        keywords = new HashMap<>();
-        keywords.put("while", TokenType.WHILE);
-    }
-
-    public Scanner (byte[] input) {
+    public Scanner(byte[] input) {
         this.input = input;
         current = 0;
         start = 0;
     }
-    // + - numeros (1, 12, 678)
-    public Token nextToken () {
+
+    public Token nextToken() {
 
         skipWhitespace();
 
         start = current;
         char ch = peek();
 
-        if (Character.isDigit(ch)) {
-            return number();
-        }
-
-        if (Character.isLetter(ch)) {
-            return identifier();
-        }
-
         switch (ch) {
-            case '+':
-                advance();
-                return new Token (TokenType.PLUS,"+");
-            case '-':
-                advance();
-                return new Token (TokenType.MINUS,"-"); 
+
+            case '"':
+                return string();
+
+            case '/':
+                if (peekNext() == '/') {
+                    skipLineComments();
+                    return nextToken();
+                } else if (peekNext() == '*') {
+                    skipBlockComments();
+                    return nextToken();
+                } else {
+                    advance();
+                    return new Token(TokenType.SLASH, line);
+                }
+
             case 0:
-                return new Token(TokenType.EOF, "EOF");  
+                return new Token(TokenType.EOF, line);
             default:
-                advance(); 
-                return new Token(TokenType.ILLEGAL, Character.toString(ch));
+
+                if (Character.isDigit(ch)) {
+                    return number();
+                }
+
+                if (Character.isLetter(ch)) {
+                    return identifier();
+                }
+
+                if (TokenType.isSymbol(ch)) {
+                    return symbol();
+                }
+
+                throw new Error(line + ":Unexpected character: " + peek());
         }
 
+    }
 
-      
+    private void skipBlockComments() {
+        boolean endComment = false;
+        advance();
 
+        while (!endComment) {
+            advance();
+            char ch = peek();
+            if (ch == 0) { // eof
+                System.exit(1);
+            }
+            if (ch == '*') {
+                for (ch = peek(); ch == '*'; advance(), ch = peek())
+                    ;
+                if (ch == '/') {
+                    endComment = true;
+                    advance();
+                }
+            }
+        }
+    }
+
+    private void skipLineComments() {
+
+        for (char ch = peek(); ch != '\n' && ch != 0; advance(), ch = peek())
+            if (ch == '\n')
+                line++;
     }
 
     private void skipWhitespace() {
         char ch = peek();
         while (ch == ' ' || ch == '\r' || ch == '\t' || ch == '\n') {
+            if (ch == '\n')
+                line++;
             advance();
             ch = peek();
         }
@@ -69,41 +110,71 @@ public class Scanner {
     private boolean isAlphaNumeric(char ch) {
         return Character.isLetter(ch) || Character.isDigit(ch);
     }
-    private Token identifier() {
-        while (isAlphaNumeric(peek()) ) {
+
+    private Token string() {
+        advance();
+        start = current;
+        while (peek() != '"' && peek() != 0) {
             advance();
         }
-        String id = new String(input, start, current-start, StandardCharsets.UTF_8);
-        TokenType type = keywords.get(id);
-        if (type == null) type = TokenType.IDENTIFIER;
-        Token token = new Token (type,id);
+        String s = new String(input, start, current - start, StandardCharsets.UTF_8);
+        Token token = new StringToken(s, line);
+        advance();
         return token;
     }
 
-    private Token number () {
+    private Token identifier() {
+        while (isAlphaNumeric(peek())) {
+            advance();
+        }
+        String id = new String(input, start, current - start, StandardCharsets.UTF_8);
+        TokenType type = TokenType.keyword(id);
+        if (type == null) {
+            type = TokenType.IDENTIFIER;
+            return new IdentifierToken(id, line);
+        } else {
+            return new KeywordToken(type, line);
+        }
+
+    }
+
+    private Token number() {
         while (Character.isDigit(peek())) {
             advance();
         }
-        String s = new String(input, start, current-start, StandardCharsets.UTF_8);
-        Token token = new Token (TokenType.NUMBER,s);
+        String s = new String(input, start, current - start, StandardCharsets.UTF_8);
+        Token token = new IntegerToken(s, line);
         return token;
     }
 
-    private void advance () {
+    private SymbolToken symbol() {
+        var ch = peek();
+        advance();
+        return new SymbolToken(TokenType.fromValue(String.valueOf(ch)), line);
+    }
+
+    private void advance() {
         char ch = peek();
         if (ch != 0) {
             current++;
         }
     }
 
-    private char peek () {
-         if ( current < input.length) {
-             return (char)input[current];
-         } else {
-             return 0;
-         }
+    private char peek() {
+        if (current < input.length) {
+            return (char) input[current];
+        } else {
+            return 0;
+        }
     }
 
+    private char peekNext() {
+        int next = current + 1;
+        if (next < input.length) {
+            return (char) input[next];
+        } else {
+            return 0;
+        }
+    }
 
-    
 }

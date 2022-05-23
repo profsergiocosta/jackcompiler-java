@@ -2,29 +2,18 @@ package br.ufma.ecp;
 
 import static org.junit.Assert.assertEquals;
 
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
 
-public class ScannerTest extends SupportTest {
+import br.ufma.ecp.token.Token;
+import br.ufma.ecp.token.TokenType;
 
-    @Test
-    public void testScannerSimpleCase() {
 
-             String input = "45 preco2 + 96";
-             Scanner scan = new Scanner(input.getBytes(StandardCharsets.UTF_8));
-             System.out.println("<tokens>");   
-             var result = new StringBuilder();
-             result.append("<tokens>\r\n");
-             for (Token tk = scan.nextToken(); tk.type != TokenType.EOF; tk = scan.nextToken()) {
-                result.append(String.format("%s\r\n",tk.toString()));
-             }
-             result.append("</tokens>\r\n");
-             System.out.println(result.toString());       
-    }
 
+public class ScannerTest extends TestSupport {
+    
     @Test
     public void testScannerWithSquareGame() throws IOException {
         var input = fromFile("Square/SquareGame.jack");
@@ -63,5 +52,7 @@ public class ScannerTest extends SupportTest {
         System.out.println(result.toString());
         assertEquals(expectedResult, result.toString());
     }
+
+    
     
 }
