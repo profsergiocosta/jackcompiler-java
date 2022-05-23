@@ -281,8 +281,8 @@ public class Parser {
     void parseTerm() {
         printNonTerminal("term");
         switch (peekToken.type) {
-            case NUMBER:
-                expectPeek(NUMBER);
+            case INTEGER:
+                expectPeek(INTEGER);
                 break;
             case STRING:
                 expectPeek(STRING);

@@ -1,7 +1,6 @@
 package br.ufma.ecp.token;
 
 import java.util.Arrays;
-import java.util.List;
 
 public enum TokenType {
  
@@ -9,7 +8,7 @@ public enum TokenType {
 
     STRING(),
 
-    NUMBER(),
+    INTEGER(),
 
     IDENTIFIER(),
 
