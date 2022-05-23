@@ -204,7 +204,7 @@ public class Parser {
             nextToken();
             xmlOutput.append(String.format("%s\r\n", currentToken.toString()));
         } else {
-            throw error(peekToken, "Expected "+type.value);
+            throw error(peekToken, "Expected "+type.name());
         }
     }
 
