@@ -316,7 +316,7 @@ public class Parser {
                 parseTerm();
                 break;
             default:
-                ;
+                throw error(peekToken, "term expected");
         }
         printNonTerminal("/term");
     }
