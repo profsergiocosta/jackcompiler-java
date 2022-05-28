@@ -37,12 +37,26 @@ public class SymbolTable {
 
     }
 
+    private Map<String,Symbol> scope (Kind kind) {
+        if (kind == Kind.STATIC || kind == Kind.FIELD){
+            return classScope;
+        } else {
+            return subroutineScope;
+        }
+    }
+
     void define(String name, String type, Kind kind) {
 
-        if (resolve(name) != null) throw new RuntimeException ("variable already defined");
+        ///Symbol other = resolve(name);
+        //if ( other != null)  throw new RuntimeException ("variable already defined");
+
+        Map<String,Symbol> scopeTable = scope(kind);
+        if (scopeTable.get(name) != null) throw new RuntimeException ("variable already defined");
 
         Symbol s = new Symbol(name, type, kind, varCount(kind));
-
+        scopeTable.put(name, s);
+        
+        /*
         if (kind == Kind.STATIC || kind == Kind.FIELD) {
             classScope.put(name, s);
         }
@@ -50,7 +64,7 @@ public class SymbolTable {
         else if (kind == Kind.ARG || kind == Kind.VAR) {
             subroutineScope.put(name, s);
         }
-
+        */
         countVars.put(kind, countVars.get(kind) + 1);
 
     }
