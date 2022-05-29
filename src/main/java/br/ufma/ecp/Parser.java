@@ -8,15 +8,15 @@ import br.ufma.ecp.token.TokenType;
 
 public class Parser {
 
-
-    private static class ParseError extends RuntimeException {}
+    private static class ParseError extends RuntimeException {
+    }
 
     private Scanner scan;
     private Token currentToken;
     private Token peekToken;
-    //private String xmlOutput = "";
+    // private String xmlOutput = "";
     private StringBuilder xmlOutput = new StringBuilder();
-    private SymbolTable symbolTable ;
+    private SymbolTable symbolTable;
 
     public Parser(byte[] input) {
         scan = new Scanner(input);
@@ -38,11 +38,11 @@ public class Parser {
         expectPeek(CLASS);
         expectPeek(IDENTIFIER);
         expectPeek(LBRACE);
-        
+
         while (peekTokenIs(STATIC) || peekTokenIs(FIELD)) {
             parseClassVarDec();
         }
-    
+
         while (peekTokenIs(FUNCTION) || peekTokenIs(CONSTRUCTOR) || peekTokenIs(METHOD)) {
             parseSubroutineDec();
         }
@@ -84,13 +84,24 @@ public class Parser {
     void parseVarDec() {
         printNonTerminal("varDec");
         expectPeek(VAR);
+
+        SymbolTable.Kind kind = Kind.STATIC;
+
         // 'int' | 'char' | 'boolean' | className
         expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
+        String type = currentToken.value();
+
         expectPeek(IDENTIFIER);
+        String name = currentToken.value();
+        symbolTable.define(name, type, kind);
 
         while (peekTokenIs(COMMA)) {
             expectPeek(COMMA);
             expectPeek(IDENTIFIER);
+
+            name = currentToken.value();
+            symbolTable.define(name, type, kind);
+
         }
 
         expectPeek(SEMICOLON);
@@ -101,19 +112,17 @@ public class Parser {
     void parseClassVarDec() {
         printNonTerminal("classVarDec");
         expectPeek(FIELD, STATIC);
-        
+
         SymbolTable.Kind kind = Kind.STATIC;
-        if (currentTokenIs(FIELD)) kind = Kind.FIELD; 
-        
+        if (currentTokenIs(FIELD))
+            kind = Kind.FIELD;
 
         // 'int' | 'char' | 'boolean' | className
         expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
         String type = currentToken.value();
-        
 
         expectPeek(IDENTIFIER);
         String name = currentToken.value();
-
 
         symbolTable.define(name, type, kind);
         while (peekTokenIs(COMMA)) {
@@ -146,16 +155,46 @@ public class Parser {
     void parseParameterList() {
         printNonTerminal("parameterList");
 
+        SymbolTable.Kind kind = Kind.ARG;
+
+        /*
+         * if (!peekTokenIs(RPAREN)) {
+         * 
+         * do {
+         * 
+         * expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
+         * String type = currentToken.value();
+         * 
+         * expectPeek(IDENTIFIER);
+         * String name = currentToken.value();
+         * symbolTable.define(name, type, kind);
+         * 
+         * } while (peekTokenIs(COMMA) ) ;
+         * 
+         * 
+         * }
+         */
+
         if (!peekTokenIs(RPAREN)) // verifica se tem pelo menos uma expressao
         {
             expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
-            expectPeek(IDENTIFIER);
-        }
+            String type = currentToken.value();
 
-        while (peekTokenIs(COMMA)) {
-            expectPeek(COMMA);
-            expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
             expectPeek(IDENTIFIER);
+            String name = currentToken.value();
+            symbolTable.define(name, type, kind);
+
+            while (peekTokenIs(COMMA)) {
+                expectPeek(COMMA);
+                expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
+                type = currentToken.value();
+
+                expectPeek(IDENTIFIER);
+                name = currentToken.value();
+
+                symbolTable.define(name, type, kind);
+            }
+
         }
 
         printNonTerminal("/parameterList");
@@ -317,7 +356,7 @@ public class Parser {
                         expectPeek(LBRACKET);
                         parseExpression();
                         expectPeek(RBRACKET);
-                    } 
+                    }
                 }
                 break;
             case LPAREN:
@@ -345,7 +384,6 @@ public class Parser {
         xmlOutput.append(String.format("<%s>\r\n", nterminal));
     }
 
-
     boolean peekTokenIs(TokenType type) {
         return peekToken.type == type;
     }
@@ -362,7 +400,7 @@ public class Parser {
             }
         }
 
-        //throw new Error("Syntax error");
+        // throw new Error("Syntax error");
         throw error(peekToken, "Expected a statement");
 
     }
@@ -372,18 +410,17 @@ public class Parser {
             nextToken();
             xmlOutput.append(String.format("%s\r\n", currentToken.toString()));
         } else {
-            //throw new Error("Syntax error - expected " + type + " found " + peekToken.type);
-            throw error(peekToken, "Expected "+type.value);
+            // throw new Error("Syntax error - expected " + type + " found " +
+            // peekToken.type);
+            throw error(peekToken, "Expected " + type.value);
         }
     }
 
-
     private static void report(int line, String where,
-        String message) {
-            System.err.println(
-            "[line " + line + "] Error" + where + ": " + message);
+            String message) {
+        System.err.println(
+                "[line " + line + "] Error" + where + ": " + message);
     }
-
 
     private ParseError error(Token token, String message) {
         if (token.type == TokenType.EOF) {
@@ -393,7 +430,5 @@ public class Parser {
         }
         return new ParseError();
     }
-
-
 
 }

@@ -303,6 +303,7 @@ public class ParserTest extends TestSupport {
           field int x, y;
           constructor Point new(int Ax, int Ay) {
             var int Ax;
+            
             let x = Ax;
             let y = Ay;
             return this;
