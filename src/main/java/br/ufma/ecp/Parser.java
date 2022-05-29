@@ -2,7 +2,7 @@ package br.ufma.ecp;
 
 import static br.ufma.ecp.token.TokenType.*;
 
-
+import br.ufma.ecp.SymbolTable.Kind;
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
 
@@ -16,9 +16,11 @@ public class Parser {
     private Token peekToken;
     //private String xmlOutput = "";
     private StringBuilder xmlOutput = new StringBuilder();
+    private SymbolTable symbolTable ;
 
     public Parser(byte[] input) {
         scan = new Scanner(input);
+        symbolTable = new SymbolTable();
         nextToken();
     }
 
@@ -38,7 +40,6 @@ public class Parser {
         expectPeek(LBRACE);
         
         while (peekTokenIs(STATIC) || peekTokenIs(FIELD)) {
-            System.out.println(peekToken);
             parseClassVarDec();
         }
     
@@ -100,13 +101,27 @@ public class Parser {
     void parseClassVarDec() {
         printNonTerminal("classVarDec");
         expectPeek(FIELD, STATIC);
+        
+        SymbolTable.Kind kind = Kind.STATIC;
+        if (currentTokenIs(FIELD)) kind = Kind.FIELD; 
+        
+
         // 'int' | 'char' | 'boolean' | className
         expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
-        expectPeek(IDENTIFIER);
+        String type = currentToken.value();
+        
 
+        expectPeek(IDENTIFIER);
+        String name = currentToken.value();
+
+
+        symbolTable.define(name, type, kind);
         while (peekTokenIs(COMMA)) {
             expectPeek(COMMA);
             expectPeek(IDENTIFIER);
+
+            name = currentToken.value();
+            symbolTable.define(name, type, kind);
         }
 
         expectPeek(SEMICOLON);
