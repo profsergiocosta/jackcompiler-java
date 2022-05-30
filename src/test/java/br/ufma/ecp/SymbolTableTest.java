@@ -29,5 +29,15 @@ public class SymbolTableTest {
 
     }
 
+
+    @Test
+    public void testDefineLocal () {
+        SymbolTable sb = new SymbolTable();
+        sb.define("var1", "int", Kind.VAR);
+        SymbolTable.Symbol s = sb.resolve("var1");
+        System.out.println(s);
+    }
+
+
     
 }

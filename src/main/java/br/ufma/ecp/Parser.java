@@ -3,6 +3,8 @@ package br.ufma.ecp;
 import static br.ufma.ecp.token.TokenType.*;
 
 import br.ufma.ecp.SymbolTable.Kind;
+import br.ufma.ecp.SymbolTable.Symbol;
+import br.ufma.ecp.VMWriter.Segment;
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
 
@@ -17,10 +19,13 @@ public class Parser {
     // private String xmlOutput = "";
     private StringBuilder xmlOutput = new StringBuilder();
     private SymbolTable symbolTable;
+    private VMWriter vmWriter;
 
     public Parser(byte[] input) {
         scan = new Scanner(input);
         symbolTable = new SymbolTable();
+        vmWriter = new VMWriter();
+
         nextToken();
     }
 
@@ -85,7 +90,7 @@ public class Parser {
         printNonTerminal("varDec");
         expectPeek(VAR);
 
-        SymbolTable.Kind kind = Kind.STATIC;
+        SymbolTable.Kind kind = Kind.VAR;
 
         // 'int' | 'char' | 'boolean' | className
         expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
@@ -349,6 +354,8 @@ public class Parser {
                 break;
             case IDENTIFIER:
                 expectPeek(IDENTIFIER);
+                Symbol sym = symbolTable.resolve(currentToken.value());
+
                 if (peekTokenIs(LPAREN) || peekTokenIs(DOT)) {
                     parseSubroutineCall();
                 } else { // variavel comum ou array
@@ -356,6 +363,8 @@ public class Parser {
                         expectPeek(LBRACKET);
                         parseExpression();
                         expectPeek(RBRACKET);
+                    } else {
+                        vmWriter.writePush(kind2Segment (sym.kind()), sym.index() );
                     }
                 }
                 break;
@@ -378,6 +387,10 @@ public class Parser {
     // funções auxiliares
     public String XMLOutput() {
         return xmlOutput.toString();
+    }
+
+    public String VMOutput() {
+        return vmWriter.vmOutput();
     }
 
     private void printNonTerminal(String nterminal) {
@@ -429,6 +442,14 @@ public class Parser {
             report(token.line, " at '" + token.value() + "'", message);
         }
         return new ParseError();
+    }
+
+    private Segment kind2Segment (Kind kind) {
+        if (kind == Kind.STATIC) return Segment.STATIC;
+        if (kind == Kind.FIELD) return Segment.THIS;
+        if (kind == Kind.VAR) return Segment.LOCAL;
+        if (kind == Kind.ARG) return Segment.ARG;
+        return null;
     }
 
 }
