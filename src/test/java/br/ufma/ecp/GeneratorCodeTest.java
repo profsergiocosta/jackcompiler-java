@@ -14,10 +14,10 @@ public class GeneratorCodeTest {
             class Point {
               field int x, y;
               constructor Point new(int Ax, int Ay) { 
-                var int w;
-                let w = 10;              
+                var int w;             
                 let x = Ax;
                 let y = Ay;
+                let w = 42;
                 let x = w;
                 return this;
              }
@@ -28,10 +28,45 @@ public class GeneratorCodeTest {
         String actual = parser.VMOutput();
         String expected = """
             push argument 0
+            pop this 0
             push argument 1
+            pop this 1
+            push constant 42
+            pop local 0
             push local 0
+            pop this 0
                 """;
         assertEquals(expected, actual);
+    }
+
+
+    @Test
+    public void writeFunctionTest() {
+
+        var input = """
+            class Main {
+                function int soma (int x, int y) {
+                       return 2 * x;
+                }
+               
+                function void main () {
+                       var int d;
+                       let d = Main.soma(4,5);
+                       return;
+                 }
+               
+               }
+            """;;
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parse();
+        String actual = parser.VMOutput();
+        String expected = """
+            function Main.soma 0
+            function Main.main 1
+                """;
+        assertEquals(expected, actual);
+
+ 
     }
     
 }

@@ -21,6 +21,8 @@ public class Parser {
     private SymbolTable symbolTable;
     private VMWriter vmWriter;
 
+    private String className;
+
     public Parser(byte[] input) {
         scan = new Scanner(input);
         symbolTable = new SymbolTable();
@@ -42,6 +44,7 @@ public class Parser {
         printNonTerminal("class");
         expectPeek(CLASS);
         expectPeek(IDENTIFIER);
+        className = currentToken.value();
         expectPeek(LBRACE);
 
         while (peekTokenIs(STATIC) || peekTokenIs(FIELD)) {
@@ -149,10 +152,12 @@ public class Parser {
         expectPeek(VOID, INT, CHAR, BOOLEAN, IDENTIFIER);
         expectPeek(IDENTIFIER);
 
+        var functionName = className + "." + currentToken.value();
+
         expectPeek(LPAREN);
         parseParameterList();
         expectPeek(RPAREN);
-        parseSubroutineBody();
+        parseSubroutineBody(functionName);
 
         printNonTerminal("/subroutineDec");
     }
@@ -205,13 +210,16 @@ public class Parser {
         printNonTerminal("/parameterList");
     }
 
-    void parseSubroutineBody() {
+    void parseSubroutineBody(String functionName) {
 
         printNonTerminal("subroutineBody");
         expectPeek(LBRACE);
         while (peekTokenIs(VAR)) {
             parseVarDec();
         }
+        var nlocals = symbolTable.varCount(Kind.VAR);
+
+        vmWriter.writeFunction(functionName, nlocals);
 
         parseStatements();
         expectPeek(RBRACE);
@@ -220,18 +228,32 @@ public class Parser {
 
     // letStatement -> 'let' identifier( '[' expression ']' )? '=' expression ';'
     void parseLet() {
+
+        var isArray = false;
+
         printNonTerminal("letStatement");
         expectPeek(LET);
         expectPeek(IDENTIFIER);
+
+        var symbol = symbolTable.resolve(currentToken.value());
 
         if (peekTokenIs(LBRACKET)) {
             expectPeek(LBRACKET);
             parseExpression();
             expectPeek(RBRACKET);
+
+            isArray = true;
         }
 
         expectPeek(EQ);
         parseExpression();
+
+        if (isArray) {
+
+        } else {
+            vmWriter.writePop(kind2Segment (symbol.kind()), symbol.index() );
+        }
+
         expectPeek(SEMICOLON);
         printNonTerminal("/letStatement");
     }
@@ -342,6 +364,7 @@ public class Parser {
         switch (peekToken.type) {
             case INTEGER:
                 expectPeek(INTEGER);
+                vmWriter.writePush(Segment.CONST,Integer.parseInt(currentToken.value()));
                 break;
             case STRING:
                 expectPeek(STRING);
