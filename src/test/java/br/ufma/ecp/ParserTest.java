@@ -18,6 +18,27 @@ public class ParserTest extends TestSupport {
         System.out.println(parser.XMLOutput());
     }
 
+    @Test
+    public void testParseLetArray() {
+        var input = """
+          // comentario
+          let texto = vetor[10];
+          """;
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseLet();
+        System.out.println(parser.XMLOutput());
+    }
+
+    @Test
+    public void testParseLetOperadorUnario() {
+        var input = """
+          // comentario
+          let texto = -10 ;
+          """;
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parseLet();
+        System.out.println(parser.XMLOutput());
+    }
     
     @Test
     public void testParseLet() {

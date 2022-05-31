@@ -122,7 +122,7 @@ public class Parser {
 
     void parseReturn() {
         printNonTerminal("returnStatement");
-
+        
 
         printNonTerminal("/returnStatement");
     }
@@ -162,9 +162,19 @@ public class Parser {
                 break;
             case IDENTIFIER:
                 expectPeek(IDENTIFIER);
+                if (peekTokenIs (LBRACKET) ) {
+                    expectPeek(LBRACKET);
+                    parseExpression();
+                    expectPeek(RBRACKET);
+                }
+                break;
+            case MINUS:
+            case NOT:
+                expectPeek(MINUS, NOT);
+                parseTerm();
                 break;
             default:
-                ;
+                throw error (peekToken, "term expected");
         }
         printNonTerminal("/term");
     }
