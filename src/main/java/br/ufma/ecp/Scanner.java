@@ -124,7 +124,7 @@ public class Scanner {
     }
 
     private Token identifier() {
-        while (isAlphaNumeric(peek())) {
+        while (isAlphaNumeric(peek()) || peek() == '_') {
             advance();
         }
         String id = new String(input, start, current - start, StandardCharsets.UTF_8);
