@@ -148,7 +148,16 @@ public class Parser {
         symbolTable.startSubroutine();
 
         printNonTerminal("subroutineDec");
-        expectPeek(CONSTRUCTOR, FUNCTION, METHOD);
+
+        if (peekTokenIs(CONSTRUCTOR)) {
+            expectPeek(CONSTRUCTOR);
+        }else if (peekTokenIs(FUNCTION)) {
+            expectPeek(FUNCTION);
+        } else {
+            expectPeek(METHOD);
+            symbolTable.define("this", className, Kind.ARG);
+        }
+        
         // 'int' | 'char' | 'boolean' | className
         expectPeek(VOID, INT, CHAR, BOOLEAN, IDENTIFIER);
         expectPeek(IDENTIFIER);
