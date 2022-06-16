@@ -3,6 +3,8 @@ package br.ufma.ecp;
 import static br.ufma.ecp.token.TokenType.*;
 
 import br.ufma.ecp.SymbolTable.Kind;
+import br.ufma.ecp.SymbolTable.Symbol;
+import br.ufma.ecp.VMWriter.Segment;
 import br.ufma.ecp.token.Token;
 import br.ufma.ecp.token.TokenType;
 
@@ -128,6 +130,7 @@ public class Parser {
         String name = currentToken.value();
 
         symbolTable.define(name, type, kind);
+
         while (peekTokenIs(COMMA)) {
             expectPeek(COMMA);
             expectPeek(IDENTIFIER);
@@ -211,6 +214,8 @@ public class Parser {
         expectPeek(LET);
         expectPeek(IDENTIFIER);
 
+        var symbol = symbolTable.resolve(currentToken.value());
+
         if (peekTokenIs(LBRACKET)) {
             expectPeek(LBRACKET);
             parseExpression();
@@ -219,6 +224,10 @@ public class Parser {
 
         expectPeek(EQ);
         parseExpression();
+
+        // tratar o caso do array
+        vmWriter.writePop(kind2Segment(symbol.kind()), symbol.index());
+
         expectPeek(SEMICOLON);
         printNonTerminal("/letStatement");
     }
@@ -329,6 +338,7 @@ public class Parser {
         switch (peekToken.type) {
             case INTEGER:
                 expectPeek(INTEGER);
+                vmWriter.writePush(Segment.CONST, Integer.parseInt(currentToken.value()));
                 break;
             case STRING:
                 expectPeek(STRING);
@@ -341,14 +351,17 @@ public class Parser {
                 break;
             case IDENTIFIER:
                 expectPeek(IDENTIFIER);
+                Symbol sym = symbolTable.resolve(currentToken.value());
                 if (peekTokenIs(LPAREN) || peekTokenIs(DOT)) {
                     parseSubroutineCall();
-                } else { // variavel comum ou array
+                } else { // variavel simples ou array
                     if (peekTokenIs(LBRACKET)) { // array
                         expectPeek(LBRACKET);
                         parseExpression();
                         expectPeek(RBRACKET);
-                    } 
+                    } else {
+                        vmWriter.writePush(kind2Segment(sym.kind()) ,sym.index());
+                    }
                 }
                 break;
             case LPAREN:
@@ -429,6 +442,13 @@ public class Parser {
         return new ParseError();
     }
 
+    private Segment kind2Segment (Kind kind) {
+        if (kind == Kind.STATIC) return Segment.STATIC;
+        if (kind == Kind.FIELD) return Segment.THIS;
+        if (kind == Kind.VAR) return Segment.LOCAL;
+        if (kind == Kind.ARG) return Segment.ARG;
+        return null;
+    }
 
 
 }
