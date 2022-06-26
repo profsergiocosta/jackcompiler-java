@@ -308,8 +308,11 @@ public class Parser {
         expectPeek(RETURN);
         if (!peekTokenIs(SEMICOLON)) {
             parseExpression();
+        } else{
+            vmWriter.writePush(Segment.CONST, 0);
         }
         expectPeek(SEMICOLON);
+        vmWriter.writeReturn();
 
         printNonTerminal("/returnStatement");
     }
@@ -362,7 +365,8 @@ public class Parser {
                     vmWriter.writeArithmetic(Command.NOT);
                 break;
             case THIS:
-                expectPeek(FALSE, NULL, TRUE, THIS);
+                expectPeek(THIS);
+                vmWriter.writePush(Segment.POINTER, 0);
                 break;
             case IDENTIFIER:
                 expectPeek(IDENTIFIER);

@@ -107,6 +107,9 @@ public class GeneratorCodeTest {
         String actual = parser.VMOutput();
         String expected = """
             function Point.new 1
+            push constant 2
+            call Memory.alloc 1
+            pop pointer 0
             push argument 0
             pop this 0
             push argument 1
@@ -115,6 +118,8 @@ public class GeneratorCodeTest {
             pop local 0
             push local 0
             pop this 0
+            push pointer 0
+            return
                 """;
         assertEquals(expected, actual);
     }
