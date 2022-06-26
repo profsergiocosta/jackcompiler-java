@@ -167,24 +167,7 @@ public class Parser {
 
         SymbolTable.Kind kind = Kind.ARG;
 
-        /*
-         * if (!peekTokenIs(RPAREN)) {
-         * 
-         * do {
-         * 
-         * expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
-         * String type = currentToken.value();
-         * 
-         * expectPeek(IDENTIFIER);
-         * String name = currentToken.value();
-         * symbolTable.define(name, type, kind);
-         * 
-         * } while (peekTokenIs(COMMA) ) ;
-         * 
-         * 
-         * }
-         */
-
+ 
         if (!peekTokenIs(RPAREN)) // verifica se tem pelo menos uma expressao
         {
             expectPeek(INT, CHAR, BOOLEAN, IDENTIFIER);
