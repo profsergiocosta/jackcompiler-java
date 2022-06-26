@@ -64,6 +64,13 @@ public class Parser {
     // subroutineCall -> subroutineName '(' expressionList ')' | (className|varName)
     // '.' subroutineName '(' expressionList ')
     void parseSubroutineCall() {
+
+        var nArgs = 0;
+
+        var ident = currentToken.value();
+        var symbol = symbolTable.resolve(ident); // classe ou objeto
+        var functionName = ident + ".";
+
         if (peekTokenIs(LPAREN)) {
             expectPeek(LPAREN);
             parseExpressionList();
@@ -71,11 +78,23 @@ public class Parser {
         } else {
             // pode ser um metodo de um outro objeto ou uma função
             expectPeek(DOT);
-            expectPeek(IDENTIFIER);
+            expectPeek(IDENTIFIER); // nome da função
+            
+
+            if (symbol != null) {
+                nArgs = 1; // do proprio objeto
+            } else {
+                functionName +=   currentToken.value();
+            }
+
             expectPeek(LPAREN);
-            parseExpressionList();
+            nArgs += parseExpressionList();
+            System.out.println(nArgs);
+        
             expectPeek(RPAREN);
         }
+
+        vmWriter.writeCall(functionName, nArgs);
     }
 
     void parseDo() {
@@ -84,6 +103,7 @@ public class Parser {
         expectPeek(IDENTIFIER);
         parseSubroutineCall();
         expectPeek(SEMICOLON);
+        vmWriter.writePop(Segment.TEMP, 0);
 
         printNonTerminal("/doStatement");
     }
@@ -149,6 +169,7 @@ public class Parser {
     void parseSubroutineDec() {
         printNonTerminal("subroutineDec");
         expectPeek(CONSTRUCTOR, FUNCTION, METHOD);
+        var subroutineType = currentToken.type;
         // 'int' | 'char' | 'boolean' | className
         expectPeek(VOID, INT, CHAR, BOOLEAN, IDENTIFIER);
         expectPeek(IDENTIFIER);
@@ -158,7 +179,7 @@ public class Parser {
         expectPeek(LPAREN);
         parseParameterList();
         expectPeek(RPAREN);
-        parseSubroutineBody(functionName);
+        parseSubroutineBody(functionName, subroutineType);
 
         printNonTerminal("/subroutineDec");
     }
@@ -194,7 +215,7 @@ public class Parser {
         printNonTerminal("/parameterList");
     }
 
-    void parseSubroutineBody(String functionName) {
+    void parseSubroutineBody(String functionName, TokenType subroutineType) {
 
         printNonTerminal("subroutineBody");
         expectPeek(LBRACE);
@@ -204,6 +225,18 @@ public class Parser {
         var nlocals = symbolTable.varCount(Kind.VAR);
 
         vmWriter.writeFunction(functionName, nlocals);
+
+        if (subroutineType == CONSTRUCTOR) {
+            vmWriter.writePush(Segment.CONST, symbolTable.varCount(Kind.FIELD) );
+            vmWriter.writeCall("Memory.alloc", 1);
+            vmWriter.writePop(Segment.POINTER, 0);
+        } 
+        
+        if (subroutineType == METHOD) {
+            vmWriter.writePush(Segment.ARG, 0);
+            vmWriter.writePop(Segment.POINTER, 0);
+        }
+        
 
         parseStatements();
         expectPeek(RBRACE);
@@ -317,21 +350,26 @@ public class Parser {
         printNonTerminal("/returnStatement");
     }
 
-    void parseExpressionList() {
+    int parseExpressionList() {
         printNonTerminal("expressionList");
+
+        var nArgs = 0;
 
         if (!peekTokenIs(RPAREN)) // verifica se tem pelo menos uma expressao
         {
             parseExpression();
+            nArgs = 1;
         }
 
         // procurando as demais
         while (peekTokenIs(COMMA)) {
             expectPeek(COMMA);
             parseExpression();
+            nArgs++;
         }
 
         printNonTerminal("/expressionList");
+        return nArgs;
     }
 
     // expression -> term (op term)*
