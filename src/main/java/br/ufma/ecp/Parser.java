@@ -71,10 +71,12 @@ public class Parser {
         var symbol = symbolTable.resolve(ident); // classe ou objeto
         var functionName = ident + ".";
 
-        if (peekTokenIs(LPAREN)) {
+        if (peekTokenIs(LPAREN)) { // método da propria classe
             expectPeek(LPAREN);
-            parseExpressionList();
+            vmWriter.writePush(Segment.POINTER,0);
+            nArgs = parseExpressionList() + 1;
             expectPeek(RPAREN);
+            functionName = className + "." + ident;
         } else {
             // pode ser um metodo de um outro objeto ou uma função
             expectPeek(DOT);
@@ -82,9 +84,11 @@ public class Parser {
             
 
             if (symbol != null) {
+                functionName = symbol.type() + "." + currentToken.value();
+                vmWriter.writePush(kind2Segment(symbol.kind()), symbol.index());
                 nArgs = 1; // do proprio objeto
             } else {
-                functionName +=   currentToken.value();
+                functionName +=   currentToken.value(); // é uma função
             }
 
             expectPeek(LPAREN);
@@ -393,6 +397,14 @@ public class Parser {
                 break;
             case STRING:
                 expectPeek(STRING);
+                var strValue = currentToken.value();
+                vmWriter.writePush(Segment.CONST, strValue.length());
+                vmWriter.writeCall("String.new", 1);
+                for (int i = 0; i < strValue.length(); i++)
+                {
+                    vmWriter.writePush(Segment.CONST, strValue.charAt(i));
+                    vmWriter.writeCall("String.appendChar", 2);
+                }
                 break;
             case FALSE:
             case NULL:
