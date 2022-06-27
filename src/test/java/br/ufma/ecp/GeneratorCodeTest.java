@@ -8,6 +8,46 @@ import org.junit.Test;
 
 public class GeneratorCodeTest {
 
+    @Test
+    public void arrayTest () {
+        var input = """
+            class Main {
+                function void main () {
+                    var Array v;
+                    let v = Array.new (10);
+                    let v[2] = v[3] + 42;
+                    return;
+                }
+            }
+            """;;
+        var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+        parser.parse();
+        String actual = parser.VMOutput();
+        String expected = """
+            function Main.main 1
+            push constant 10
+            call Array.new 1
+            pop local 0
+            push constant 2
+            push local 0
+            add
+            push constant 3
+            push local 0
+            add
+            pop pointer 1
+            push that 0
+            push constant 42
+            add
+            pop temp 0
+            pop pointer 1
+            push temp 0
+            pop that 0
+            push constant 0
+            return        
+                """;
+        assertEquals(expected, actual);
+    }
+
 
     @Test
     public void ifTest () {
