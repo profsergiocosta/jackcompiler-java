@@ -381,11 +381,32 @@ public class Parser {
         printNonTerminal("expression");
         parseTerm();
         while (isOperator(peekToken.type)) {
+            var op = peekToken.type;
             expectPeek(peekToken.type);
             parseTerm();
+            compileOperators(op);
         }
         printNonTerminal("/expression");
     }
+
+    void compileOperators(TokenType type)
+    {
+
+    if (type == ASTERISK)
+    {
+        vmWriter.writeCall("Math.multiply", 2);
+    }
+    else if (type == SLASH)
+    {
+        vmWriter.writeCall("Math.divide", 2);
+    }
+    else
+    {
+        vmWriter.writeArithmetic(typeOperator(type));
+    }
+}
+
+
 
     // term -> number | identifier | stringConstant | keywordConstant
     void parseTerm() {
@@ -515,6 +536,17 @@ public class Parser {
         if (kind == Kind.FIELD) return Segment.THIS;
         if (kind == Kind.VAR) return Segment.LOCAL;
         if (kind == Kind.ARG) return Segment.ARG;
+        return null;
+    }
+
+    private Command typeOperator (TokenType type) {
+        if (type == PLUS) return Command.ADD;
+        if (type == MINUS) return Command.SUB;
+        if (type == LT) return Command.LT;
+        if (type == GT) return Command.GT;
+        if (type == EQ) return Command.EQ;
+        if (type == AND) return Command.AND;
+        if (type == OR) return Command.OR;
         return null;
     }
 
