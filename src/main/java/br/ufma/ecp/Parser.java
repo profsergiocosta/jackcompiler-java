@@ -98,7 +98,6 @@ public class Parser {
 
             expectPeek(LPAREN);
             nArgs += parseExpressionList();
-            System.out.println(nArgs);
 
             expectPeek(RPAREN);
         }
@@ -181,8 +180,15 @@ public class Parser {
         ifLabelNum = 0;
         whileLabelNum = 0;
 
+        symbolTable.startSubroutine();
+
         expectPeek(CONSTRUCTOR, FUNCTION, METHOD);
         var subroutineType = currentToken.type;
+
+        if (subroutineType == METHOD) {
+            symbolTable.define("this", className, Kind.ARG);
+        }
+
         // 'int' | 'char' | 'boolean' | className
         expectPeek(VOID, INT, CHAR, BOOLEAN, IDENTIFIER);
         expectPeek(IDENTIFIER);
@@ -332,6 +338,8 @@ public class Parser {
         var labelTrue = "IF_TRUE" + ifLabelNum;
         var labelFalse = "IF_FALSE" + ifLabelNum;
         var labelEnd = "IF_END" + ifLabelNum;
+
+        ifLabelNum++;
     
         expectPeek(IF);
         expectPeek(LPAREN);
@@ -526,7 +534,13 @@ public class Parser {
             case MINUS:
             case NOT:
                 expectPeek(MINUS, NOT);
+                var op = currentToken.type;
                 parseTerm();
+                if (op == MINUS)
+                    vmWriter.writeArithmetic(Command.NEG);
+                else
+                    vmWriter.writeArithmetic(Command.NOT);
+    
                 break;
             default:
                 throw error(peekToken, "term expected");
