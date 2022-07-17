@@ -432,7 +432,8 @@ public class GeneratorCodeTest {
             
               function void main () {
                   var int x;
-                  let y = 42;
+                  let x = 42;
+                  return;
               }
             }
             """;;
@@ -443,6 +444,8 @@ public class GeneratorCodeTest {
             function Main.main 1
             push constant 42
             pop local 0
+            push constant 0
+            return
                 """;
         assertEquals(expected, actual);
     }
@@ -491,7 +494,7 @@ public class GeneratorCodeTest {
         var input = """
             class Main {
                 function int soma (int x, int y) {
-                       return 2 * x;
+                       return  x + y;
                 }
                
                 function void main () {
@@ -509,7 +512,17 @@ public class GeneratorCodeTest {
         String actual = parser.VMOutput();
         String expected = """
             function Main.soma 0
+            push argument 0
+            push argument 1
+            add
+            return
             function Main.main 1
+            push constant 4
+            push constant 5
+            call Main.soma 2
+            pop local 0
+            push constant 0
+            return
                 """;
         assertEquals(expected, actual);
  

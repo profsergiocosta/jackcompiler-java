@@ -88,7 +88,7 @@ public class Parser {
             expectPeek(DOT);
             expectPeek(IDENTIFIER); // nome da função
 
-            if (symbol != null) {
+            if (symbol != null) { // é um metodo
                 functionName = symbol.type() + "." + currentToken.value();
                 vmWriter.writePush(kind2Segment(symbol.kind()), symbol.index());
                 nArgs = 1; // do proprio objeto
