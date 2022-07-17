@@ -12,7 +12,7 @@ public class ParserTest extends TestSupport {
 
     @Test
     public void testParseLetSimple() {
-        var input = "let a = 5+B-8;";
+        var input = "let string = 20;";
         var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
         parser.parseLet();
         System.out.println(parser.XMLOutput());
@@ -293,6 +293,28 @@ public class ParserTest extends TestSupport {
         var result = parser.XMLOutput();
         expectedResult = expectedResult.replaceAll("  ", "");
         assertEquals(expectedResult, result);
+    }
+
+    @Test
+    public void testVarDeclaration () {
+
+      var input = """
+        class Point {
+          field int x, y;
+          constructor Point new(int Ax, int Ay) {
+            var int Ax;
+            
+            let x = Ax;
+            let y = Ay;
+            return this;
+         }
+        }
+        """;;
+    var parser = new Parser(input.getBytes(StandardCharsets.UTF_8));
+    parser.parse();
+    var result = parser.XMLOutput();
+    System.out.println(result);
+
     }
 
 }
